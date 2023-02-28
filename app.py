@@ -123,7 +123,7 @@ def register_user():
 	try:
 		email=request.form.get('email')
 		password=request.form.get('password')
-		dob = request.form['dob']
+		dob = request.form.get('dob')
 		first_name = request.form.get('first_name')
 		last_name = request.form.get('last_name')
 		gender = request.form.get('gender')
