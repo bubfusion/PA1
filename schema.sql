@@ -56,8 +56,12 @@ CREATE TABLE Comments(
 );
 
 CREATE TABLE Friends(
-    user_id int4,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    user_id1 int4,
+    user_id2 int4,
+    CHECK(user_id1 <> user_id2),
+    FOREIGN KEY (user_id1) REFERENCES Users(user_id),
+    FOREIGN KEY (user_id2) REFERENCES Users(user_id),
+	PRIMARY KEY(user_id1, user_id2)
 );
 
 CREATE TABLE Likes(
