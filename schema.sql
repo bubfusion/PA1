@@ -51,6 +51,7 @@ CREATE TABLE Comments(
     text VARCHAR(255),
     user_id int4 NOT NULL,
     picture_id int4 NOT NULL,
+    CHECK(user_id <> picture_id.user_id),
     PRIMARY KEY(commentid),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
 	FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE
@@ -68,8 +69,8 @@ CREATE TABLE Friends(
 CREATE TABLE Likes(
     picture_id int4,
     User_id int4,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE,
     PRIMARY KEY(user_id, picture_id)
 );
 
@@ -86,6 +87,7 @@ CREATE TABLE Tagged(
     FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
     PRIMARY KEY(picture_id, tag_id)
 );
+
 
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test2@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
