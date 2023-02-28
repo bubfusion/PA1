@@ -120,7 +120,8 @@ def register():
 
 @app.route("/register", methods=['POST'])
 def register_user():
-	try:
+	error = ''
+	if request.method == 'POST' and 'email' in request.form and 'password' in request.form and 'dob' in request.form and 'first_name' in request.form:
 		email=request.form.get('email')
 		password=request.form.get('password')
 		dob = request.form.get('dob')
@@ -128,9 +129,12 @@ def register_user():
 		last_name = request.form.get('last_name')
 		gender = request.form.get('gender')
 		hometown = request.form.get('hometown')
-	except:
-		print("couldn't find all tokens") #this prints to shell, end users will not see this (all print statements go to shell)
+	else:
+		error = "Missing field/s"
+		print(request.form)
+		print(error)
 		return flask.redirect(flask.url_for('register'))
+
 	cursor = conn.cursor()
 	test =  isEmailUnique(email)
 	if test:
@@ -140,9 +144,9 @@ def register_user():
 		user = User()
 		user.id = email
 		flask_login.login_user(user)
-		return render_template('hello.html', name=email, message='Account Created!')
+		return render_template('hello.html', name=first_name, message='Account Created!')
 	else:
-		print("couldn't find all tokens")
+		print("Email in already in use!")
 		return flask.redirect(flask.url_for('register'))
 
 def getUsersPhotos(uid):

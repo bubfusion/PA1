@@ -8,17 +8,18 @@
     <body>
         <div class="title">
             <h1>Enter your information below</h1>
+            <div class="msg">{{ msg }}</div>
         </div>
         <div id="content">
             <form method="post" action="{{ url_for('register_user') }}">
-                <label for="email">Enter your email:</label>
-                <input type="email" name="email" /><br />
-                <label for="password">Enter password:</label>
-                <input type="password" name="password" /><br />
-                <label for="dob">Enter Date of birth:</label>
-                <input type="date" name="dob" /><br />
-                <label for="first_name">First name:</label>
-                <input type="text" name="first_name" /><br />
+                <label for="email">*Enter your email:</label>
+                <input type="email" name="email" required/><br />
+                <label for="password">*Enter password:</label>
+                <input type="password" name="password" required/><br />
+                <label for="dob">*Enter Date of birth:</label>
+                <input type="date" name="dob" required/><br />
+                <label for="first_name">*First name:</label>
+                <input type="text" name="first_name" required/><br />
                 <label for="last_name">Last name:</label>
                 <input type="text" name="last_name" /><br />
                 <label for="gender">Gender:</label>
