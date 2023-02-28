@@ -24,12 +24,12 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Albums(
-    albumid int4 AUTO_INCREMENT,
+    album_id int4 AUTO_INCREMENT,
     user_id int4,
     creation_date DATE,
     name VARCHAR(255),
-    PRIMARY KEY(albumid),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    PRIMARY KEY(album_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Pictures
@@ -41,7 +41,8 @@ CREATE TABLE Pictures
     album_id int4 NOT NULL,
     INDEX upid_idx (user_id),
     PRIMARY KEY (picture_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (album_id) REFERENCES Albums(album_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Comments(
@@ -51,16 +52,16 @@ CREATE TABLE Comments(
     user_id int4 NOT NULL,
     picture_id int4 NOT NULL,
     PRIMARY KEY(commentid),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-	FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+	FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Friends(
     user_id1 int4,
     user_id2 int4,
     CHECK(user_id1 <> user_id2),
-    FOREIGN KEY (user_id1) REFERENCES Users(user_id),
-    FOREIGN KEY (user_id2) REFERENCES Users(user_id),
+    FOREIGN KEY (user_id1) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id2) REFERENCES Users(user_id) ON DELETE CASCADE,
 	PRIMARY KEY(user_id1, user_id2)
 );
 
