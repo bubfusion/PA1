@@ -68,5 +68,19 @@ CREATE TABLE Likes(
     PRIMARY KEY(user_id, picture_id)
 );
 
+CREATE TABLE Tags(
+	tag_id int4,
+    name VARCHAR(100),
+    PRIMARY KEY(tag_id)
+);
+
+CREATE TABLE Tagged(
+	picture_id int4,
+    tag_id int4,
+    FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id),
+    FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
+    PRIMARY KEY(picture_id, tag_id)
+);
+
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test2@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
