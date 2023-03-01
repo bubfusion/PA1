@@ -193,6 +193,19 @@ def getUserIdFromEmail(email):
         "SELECT user_id  FROM Users WHERE email = '{0}'".format(email))
     return cursor.fetchone()[0]
 
+def getUsersFriends(uid):
+    cursor = conn.cursor() 
+    cursor.execute("SELECT user_id2 FROM Friends WHERE user_id1 = '{0}'".format(uid))
+    return cursor.fetchall()
+
+def isFriendsWith(uid, uid2):
+    cursor = conn.cursor() 
+    if cursor.execute("SELECT user_id2 FROM Friends WHERE user_id1 = {0} AND user_id2 = {1}".format(uid, uid2)):
+        print(cursor.execute("SELECT user_id2 FROM Friends WHERE user_id1 = {0} AND user_id2 = {1}".format(uid, uid2)))
+        return True
+    else:
+        return False
+
 
 def isEmailUnique(email):
     # use this to check if a email has already been registered
@@ -204,14 +217,31 @@ def isEmailUnique(email):
         return True
 # end login code
 
-@app.route('/friends', methods=['GET', 'POST'])
-def friends():
+
+@app.route("/friends", methods=['GET'])
+def friend():
+	return render_template('friends.html')
+
+@app.route('/friends', methods=['POST'])
+def add_friend():
     if request.method == 'POST':
-        uid = getUserIdFromEmail(flask_login.current_user.id)
-        search = request.form.get('search')
-        if search not in friends:
-            friends.append(getUserIdFromEmail(search))
-        return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), base64=base64)
+        friend = request.form.get('friends')
+        uid1 = getUserIdFromEmail(flask_login.current_user.id)
+        
+        if isEmailUnique(friend) == True:
+            return render_template('friends.html', msg = 'Email does not exist!')
+        else:
+             uid2 = getUserIdFromEmail(friend)
+        if isFriendsWith(uid1, uid2):
+            return render_template('friends.html', msg = 'You are already friends with that user')
+        else:
+            try:
+                print(cursor.execute('''INSERT INTO Friends (user_id1, user_id2) VALUES (%s, %s)''', (uid1, uid2)))
+                conn.commit()
+                return render_template('hello.html', name=flask_login.current_user.id, message='Friend added!', photos=getUsersPhotos(uid1), base64=base64)
+            except:
+                return render_template('friends.html', msg = 'Can not friend yourself!')
+       
     # The method is GET so we return a  HTML form to upload the a photo.
     else:
         return render_template('friends.html')
