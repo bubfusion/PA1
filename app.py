@@ -32,7 +32,7 @@ app.register_blueprint(album_creation)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -46,6 +46,7 @@ conn = mysql.connect()
 cursor = conn.cursor()
 cursor.execute("SELECT email from Users")
 users = cursor.fetchall()
+friends = []
 
 
 def getUserList():
@@ -192,13 +193,12 @@ def getUsersPhotos(uid):
     # NOTE return a list of tuples, [(imgdata, pid, caption), ...]
     return cursor.fetchall()
 
+
 def getFeedPhotos(uid):
     cursor = conn.cursor()
     friends = getUsersFriends(uid)
     feed_tuple = getUsersPhotos(uid)
     for i in friends:
-        print(i[0])
-        print("loops")
         feed_tuple = feed_tuple + getUsersPhotos(i[0])
     return feed_tuple
 
@@ -274,14 +274,6 @@ def protected():
 
 
 # begin photo uploading code
-@app.route('/comments', methods=['GET'])
-def photos():
-	return render_template('hello.html')
-
-@app.route('/comments', methods=['POST'])
-def browsePhotos():
-	return render_template('hello.html')
-
 # photos uploaded using base64 encoding so they can be directly embeded in HTML
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
