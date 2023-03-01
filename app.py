@@ -173,6 +173,17 @@ def register_user():
         print("Email in already in use!")
         return flask.redirect(flask.url_for('register'))
 
+def getComments(uid):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT commentid, FROM Comments WHERE commentid = '{0}'".format(uid))
+    return cursor.fetchall()
+
+def getLikes(uid):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT picture_id FROM Likes WHERE user_id = '{0}'".format(uid))
+    return cursor.fetchall()
 
 def getUsersPhotos(uid):
     cursor = conn.cursor()
@@ -263,11 +274,11 @@ def protected():
 
 
 # begin photo uploading code
-@app.route('/photos', methods=['GET'])
+@app.route('/comments', methods=['GET'])
 def photos():
 	return render_template('hello.html')
 
-@app.route('/photos', methods=['POST'])
+@app.route('/comments', methods=['POST'])
 def browsePhotos():
 	return render_template('hello.html')
 
