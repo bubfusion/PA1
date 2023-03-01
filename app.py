@@ -29,7 +29,7 @@ app.secret_key = 'CS460'
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -204,14 +204,15 @@ def isEmailUnique(email):
 @app.route('/friends', methods=['GET', 'POST'])
 def friends():
     if request.method == 'POST':
-        uid = getUserIdFromEmail(flask_login.current_user.id)
-        search = request.form.get('search')
-        if search not in friends:
-            friends.append(getUserIdFromEmail(search))
-        return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), base64=base64)
+        search = request.form.get('search_friend')
+        cursor = conn.cursor()
+        cursor.execute('''INSERT INTO Friends (user_id) VALUES (%s)''',(search))
+        conn.commit()
+        print("Hello")
+        return render_template('hello.html')    
     # The method is GET so we return a  HTML form to upload the a photo.
     else:
-        return render_template('friends.html')
+        return render_template('friends.html',  message='There was an error finding a friend!')
 
 @app.route('/profile')
 @flask_login.login_required
