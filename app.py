@@ -32,7 +32,7 @@ app.register_blueprint(album_creation)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -244,7 +244,7 @@ def add_friend():
        
     # The method is GET so we return a  HTML form to upload the a photo.
     else:
-        return render_template('friends.html')
+        return render_template('friends.html',  message='There was an error finding a friend!')
 
 @app.route('/profile')
 @flask_login.login_required
