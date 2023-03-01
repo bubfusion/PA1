@@ -11,10 +11,13 @@
 
 import datetime
 import flask
-from flask import Flask, Response, request, render_template, redirect, url_for
+from flask import Flask, Response, request, render_template, redirect, url_for, Blueprint
 from flaskext.mysql import MySQL
 import flask_login
 from flask_login import current_user
+from upload_handling import upload_handling
+
+
 
 # for image uploading
 import os
@@ -34,6 +37,7 @@ mysql.init_app(app)
 # begin code used for login
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
+app.register_blueprint(upload_handling)
 
 conn = mysql.connect()
 cursor = conn.cursor()
@@ -224,34 +228,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@app.route('/upload', methods=['GET'])
-@flask_login.login_required
-def upload():
-    uid = getUserIdFromEmail(flask_login.current_user.id)
-    albums = getUsersAlbums(uid)
-    return render_template("upload.html",albums=albums ) 
-   
 
-
-
-@app.route('/upload', methods=['POST'])
-@flask_login.login_required
-def upload_file():
-    if request.method == 'POST':
-        uid = getUserIdFromEmail(flask_login.current_user.id)
-        imgfile = request.files['photo']
-        caption = request.form.get('caption')
-        photo_data = imgfile.read()
-        albums = request.form.get('albums')
-        cursor = conn.cursor()
-        cursor.execute(
-            '''INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES (%s, %s, %s, %s)''', (photo_data, uid, caption, albums))
-        conn.commit()
-        return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), base64=base64)
-    # The method is GET so we return a  HTML form to upload the a photo.
-    else:
-        return render_template('upload.html')
-# end photo uploading code
 
 
 @app.route("/album_creation", methods=['GET'])
