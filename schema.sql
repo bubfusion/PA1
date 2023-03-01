@@ -41,7 +41,7 @@ CREATE TABLE Pictures
     album_id int4 NOT NULL,
     INDEX upid_idx (user_id),
     PRIMARY KEY (picture_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (album_id) REFERENCES Albums(album_id) ON DELETE CASCADE
 );
 
@@ -83,7 +83,7 @@ CREATE TABLE Tags(
 CREATE TABLE Tagged(
 	picture_id int4,
     tag_id int4,
-    FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id),
+    FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
     PRIMARY KEY(picture_id, tag_id)
 );
