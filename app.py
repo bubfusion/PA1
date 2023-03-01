@@ -175,6 +175,10 @@ def getUsersPhotos(uid):
     # NOTE return a list of tuples, [(imgdata, pid, caption), ...]
     return cursor.fetchall()
 
+def getUsersAlbums(uid):
+    cursor = conn.cursor() 
+    cursor.execute("SELECT album_id,name FROM Albums WHERE user_id = '{0}'".format(uid))
+    return cursor.fetchall()
 
 def getUserIdFromEmail(email):
     cursor = conn.cursor()
@@ -220,7 +224,17 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET'])
+@flask_login.login_required
+def upload():
+    uid = getUserIdFromEmail(flask_login.current_user.id)
+    albums = getUsersAlbums(uid)
+    return render_template("upload.html",albums=albums ) 
+   
+
+
+
+@app.route('/upload', methods=['POST'])
 @flask_login.login_required
 def upload_file():
     if request.method == 'POST':
@@ -228,9 +242,10 @@ def upload_file():
         imgfile = request.files['photo']
         caption = request.form.get('caption')
         photo_data = imgfile.read()
+        albums = request.form.get('albums')
         cursor = conn.cursor()
         cursor.execute(
-            '''INSERT INTO Pictures (imgdata, user_id, caption) VALUES (%s, %s, %s )''', (photo_data, uid, caption))
+            '''INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES (%s, %s, %s, %s)''', (photo_data, uid, caption, albums))
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), base64=base64)
     # The method is GET so we return a  HTML form to upload the a photo.
