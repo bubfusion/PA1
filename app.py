@@ -26,7 +26,7 @@ app.secret_key = 'CS460'
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -237,6 +237,26 @@ def upload_file():
     else:
         return render_template('upload.html')
 # end photo uploading code
+
+
+@app.route("/album_creation", methods=['GET'])
+def album():
+	return render_template('album_creation.html', supress='True')
+
+@app.route("/album_creation", methods=['POST'])
+@flask_login.login_required
+def create_album():
+	if request.method == 'POST':
+		name = request.form.get('album_name')
+		uid = getUserIdFromEmail(flask_login.current_user.id)
+		date = datetime.date.today()
+		cursor = conn.cursor()
+		cursor.execute('''INSERT INTO Albums (user_id, creation_date, name) VALUES (%s, %s, %s )''', (uid, date, name))
+		conn.commit()
+		print("Hello world")
+		return render_template('hello.html', name=flask_login.current_user.id, message='Album created!')
+	else:
+		return render_template('hello.html', name=flask_login.current_user.id, message='There was an error creating an album!')
 
 
 # default page
