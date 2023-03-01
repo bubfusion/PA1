@@ -16,6 +16,7 @@ from flaskext.mysql import MySQL
 import flask_login
 from flask_login import current_user
 from upload_handling import upload_handling
+from album_creation import album_creation
 
 
 
@@ -26,6 +27,8 @@ import base64
 mysql = MySQL()
 app = Flask(__name__)
 app.secret_key = 'CS460'
+app.register_blueprint(upload_handling)
+app.register_blueprint(album_creation)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -37,7 +40,7 @@ mysql.init_app(app)
 # begin code used for login
 login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
-app.register_blueprint(upload_handling)
+
 
 conn = mysql.connect()
 cursor = conn.cursor()
@@ -226,30 +229,6 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-
-
-
-@app.route("/album_creation", methods=['GET'])
-def album():
-	return render_template('album_creation.html', supress='True')
-
-@app.route("/album_creation", methods=['POST'])
-@flask_login.login_required
-def create_album():
-	if request.method == 'POST':
-		name = request.form.get('album_name')
-		uid = getUserIdFromEmail(flask_login.current_user.id)
-		date = datetime.date.today()
-		cursor = conn.cursor()
-		cursor.execute('''INSERT INTO Albums (user_id, creation_date, name) VALUES (%s, %s, %s )''', (uid, date, name))
-		conn.commit()
-		print("Hello world")
-		return render_template('hello.html', name=flask_login.current_user.id, message='Album created!')
-	else:
-		return render_template('hello.html', name=flask_login.current_user.id, message='There was an error creating an album!')
-
 
 # default page
 @app.route("/", methods=['GET'])
