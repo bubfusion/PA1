@@ -31,6 +31,9 @@ def upload_file():
         photo_data = imgfile.read()
         albums = request.form.get('albums')
         cursor = main.conn.cursor()
+        if albums is None:
+            return render_template('hello.html', name=main.flask_login.current_user.id, message='Error uploading! Please create an album', photos=main.getUsersPhotos(uid), base64=base64)
+        
         cursor.execute(
             '''INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES (%s, %s, %s, %s)''', (photo_data, uid, caption, albums))
         main.conn.commit()
