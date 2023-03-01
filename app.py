@@ -32,7 +32,7 @@ app.register_blueprint(album_creation)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -46,7 +46,6 @@ conn = mysql.connect()
 cursor = conn.cursor()
 cursor.execute("SELECT email from Users")
 users = cursor.fetchall()
-friends = []
 
 
 def getUserList():
@@ -264,6 +263,14 @@ def protected():
 
 
 # begin photo uploading code
+@app.route('/photos', methods=['GET'])
+def photos():
+	return render_template('hello.html')
+
+@app.route('/photos', methods=['POST'])
+def browsePhotos():
+	return render_template('hello.html')
+
 # photos uploaded using base64 encoding so they can be directly embeded in HTML
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
