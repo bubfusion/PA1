@@ -9,6 +9,7 @@
 # see links for further understanding
 ###################################################
 
+import datetime
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for
 from flaskext.mysql import MySQL
@@ -148,7 +149,26 @@ def register_user():
 	else:
 		print("Email in already in use!")
 		return flask.redirect(flask.url_for('register'))
+	
+@app.route("/album_creation", methods=['GET'])
+def album():
+	return render_template('album_creation.html', supress='True')
 
+@app.route("/album_creation", methods=['POST'])
+@flask_login.login_required
+def create_album():
+	if request.method == 'POST':
+		name = request.form.get('album_name')
+		uid = getUserIdFromEmail(flask_login.current_user.id)
+		date = datetime.date.today()
+		cursor = conn.cursor()
+		cursor.execute('''INSERT INTO Albums (user_id, creation_date, name) VALUES (%s, %s, %s )''', (uid, date, name))
+		conn.commit()
+		print("Hello world")
+		return render_template('hello.html', name=flask_login.current_user.id, message='Album created!')
+	else:
+		return render_template('hello.html', name=flask_login.current_user.id, message='There was an error creating an album!')
+	
 def getUsersPhotos(uid):
 	cursor = conn.cursor()
 	cursor.execute("SELECT imgdata, picture_id, caption FROM Pictures WHERE user_id = '{0}'".format(uid))

@@ -27,7 +27,7 @@ CREATE TABLE Albums(
     album_id int4 AUTO_INCREMENT,
     user_id int4,
     creation_date DATE,
-    name VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
     PRIMARY KEY(album_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
