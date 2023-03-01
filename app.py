@@ -182,6 +182,16 @@ def getUsersPhotos(uid):
     # NOTE return a list of tuples, [(imgdata, pid, caption), ...]
     return cursor.fetchall()
 
+def getFeedPhotos(uid):
+    cursor = conn.cursor()
+    friends = getUsersFriends(uid)
+    feed_tuple = getUsersPhotos(uid)
+    for i in friends:
+        print(i[0])
+        print("loops")
+        feed_tuple = feed_tuple + getUsersPhotos(i[0])
+    return feed_tuple
+
 def getUsersAlbums(uid):
     cursor = conn.cursor() 
     cursor.execute("SELECT album_id,name FROM Albums WHERE user_id = '{0}'".format(uid))
@@ -249,7 +259,8 @@ def add_friend():
 @app.route('/profile')
 @flask_login.login_required
 def protected():
-    return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile")
+    return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
+                           photos=getFeedPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
 
 
 # begin photo uploading code
