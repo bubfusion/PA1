@@ -15,4 +15,4 @@ def feed():
     cursor = main.conn.cursor()
     cursor.execute("SELECT imgdata, picture_id, caption FROM Pictures")
     photos = cursor.fetchall()
-    return render_template("global.html", photos=photos, base64=base64) 
+    return render_template('hello.html', message='Global feed', photos=photos, base64=base64)
