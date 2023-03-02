@@ -13,7 +13,7 @@ comment_handling = Blueprint('comment_handling', __name__, template_folder='temp
 @comment_handling.route('/comments/<int:picture_id>', methods=['GET'])
 def comments(picture_id):
     cursor = main.conn.cursor()
-    cursor.execute("SELECT text, first_name, date FROM Comments INNER JOIN Users ON Comments.user_id = Users.user_id WHERE picture_id = {0}".format(picture_id))
+    cursor.execute("SELECT text, first_name, date, Comments.user_id FROM Comments INNER JOIN Users ON Comments.user_id = Users.user_id WHERE picture_id = {0}".format(picture_id))
     comments = cursor.fetchall()
     return render_template('comments.html', comments=comments, picture_id = picture_id)
 
