@@ -38,13 +38,19 @@
           {% endif %}
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
-        <form method="post" action="{{ url_for('add_tag') }}">
+        <form method="POST" action="{{ url_for('add_tag') }}">
           <input type="hidden" name="picture_id" value="{{ picture_id }}">
-          <label for="tag_name">Tag Name:</label>
-          <input type="text" name="tag_name" id="tag_name" required>
-          <button type="submit">Add Tag</button>
+          <label for="tag_name">Tag:</label>
+          <input type="text" name="tag_name" required>
+          <button type="submit">Add tag</button>
         </form>
           <p> Tags:</p>
+          <form method="post" action="{{ url_for('add_tag') }}">
+            <button type="submit">View all</button>
+          </form>
+          <form method="post" action="{{ url_for('add_tag') }}">
+            <button type="submit">View my photos</button>
+          </form>
     <!-- search_results.html -->
 {% for result in results %}
 <div>
