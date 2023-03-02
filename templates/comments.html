@@ -2,6 +2,9 @@
 <!doctype html>
 
 <h2>{{ picture_id }}</h2>
+{% if message %}
+    <h2>{{message}}</h2>
+{% endif %}
 <h2>Comments:</h2>
 {% if comments %}
     <ul>

@@ -1,4 +1,4 @@
-DROP DATABASE photoshare;
+DROP TABLE Comments;
 
 CREATE DATABASE IF NOT EXISTS photoshare;
 USE photoshare;
@@ -86,6 +86,19 @@ CREATE TABLE Tagged(
     FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
     PRIMARY KEY(picture_id, tag_id)
 );
+
+
+DELIMITER $$
+CREATE TRIGGER commentingOwnPost BEFORE INSERT ON Comments
+FOR EACH ROW
+BEGIN
+   SET @picture_user_id = (SELECT user_id FROM Pictures WHERE picture_id = NEW.picture_id);
+   IF NEW.user_id = picture_user_id THEN
+		CALL RAISE_APPLICATION_ERROR(-20999, "Can't friend self!");
+   END IF;
+END$$
+DELIMITER ;
+
 
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test2@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
