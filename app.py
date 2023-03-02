@@ -17,7 +17,7 @@ import flask_login
 from flask_login import current_user
 from upload_handling import upload_handling
 from album_creation import album_creation
-
+from global_feed import global_feed
 
 
 # for image uploading
@@ -29,6 +29,7 @@ app = Flask(__name__)
 app.secret_key = 'CS460'
 app.register_blueprint(upload_handling)
 app.register_blueprint(album_creation)
+app.register_blueprint(global_feed)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
