@@ -16,7 +16,7 @@ def user_profile(user_id, album_id):
      print(user_id, album_id)
      if main.isIdValid(user_id):
         cursor = main.conn.cursor()
-        cursor.execute("SELECT Pictures.imgdata FROM Albums INNER JOIN Pictures ON Albums.album_id = Pictures.album_id WHERE Albums.album_id = {0}".format(album_id))
+        cursor.execute("SELECT Pictures.imgdata, Pictures.picture_id, Pictures.caption FROM Albums INNER JOIN Pictures ON Albums.album_id = Pictures.album_id WHERE Albums.album_id = {0}".format(album_id))
         photos = cursor.fetchall()
         return render_template('hello.html', message="Album: " + main.getAlbumNameFromAlbumId(album_id),  
                            photos=photos, base64=base64, user_id = user_id)

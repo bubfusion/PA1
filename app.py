@@ -15,12 +15,12 @@ from flask import Flask, Response, request, render_template, redirect, url_for, 
 from flaskext.mysql import MySQL
 import flask_login
 from flask_login import current_user
-from upload_handling import upload_handling
-from album_creation import album_creation
-from global_feed import global_feed
-from personal_feed import personal_feed
-from comment_handling import comment_handling
-from album_viewing import album_viewing
+from Routing.upload_handling import upload_handling
+from Routing.album_creation import album_creation
+from Routing.global_feed import global_feed
+from Routing.personal_feed import personal_feed
+from Routing.comment_handling import comment_handling
+from Routing.album_viewing import album_viewing
 
 # for image uploading
 import os
