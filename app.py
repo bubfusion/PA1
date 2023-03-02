@@ -285,7 +285,7 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
 
-@app.route("/tags/<int:picture_id>", methods=['GET'])
+@app.route("popular_tags", methods=['GET'])
 def popular_tags():
     return render_template('hello.html', name=flask_login.current_user.id, photos=getUsersPhotos(userid), base64=base64)
 
@@ -296,7 +296,7 @@ def search_tags(tag_id):
     tags = cursor.fetchall()
     return render_template('hello.html')
                            
-@app.route("/add_tag", methods=['GET'])
+@app.route("/display_tag", methods=['GET'])
 def display_tag(picture_id):
     cursor = conn.cursor()
     cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
@@ -304,7 +304,7 @@ def display_tag(picture_id):
     return render_template('hello.html', tags=tags, picture_id = picture_id)
     
 
-@app.route('/tags/<int:picture_id>', methods=['POST'])
+@app.route("/add_tag", methods=['POST'])
 def add_tag(picture_id):
     if request.method == 'POST':
         tag = request.form.get('tag')
