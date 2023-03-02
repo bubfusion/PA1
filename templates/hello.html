@@ -15,6 +15,9 @@
         <li>
           <a href="/profile/{{user_id}}/{{albums[1]}}" class="button" name="album_link">{{albums[0]}}</a>
         </li>
+        {%if current_user == albums[2] %}
+            <a href="/album/{{albums[1]}}/delete" class="button" name="delete">Delete album: {{albums[0]}}</a>
+        {%endif%}
     {% endfor %}
     </ul>
 {% endif %}

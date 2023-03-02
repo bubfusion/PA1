@@ -21,4 +21,4 @@ def user_profile(user_id, album_id):
         return render_template('hello.html', message="Album: " + main.getAlbumNameFromAlbumId(album_id),  
                            photos=photos, base64=base64, user_id = user_id)
      else:
-         return render_template('hello.html', message="Sorry! That user does not exist")
+         return render_template('hello.html', message="Sorry! That album or user does not exist")
