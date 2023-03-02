@@ -161,7 +161,6 @@ def register_user():
         hometown = request.form.get('hometown')
     else:
         error = "Missing field/s"
-        print(request.form)
         print(error)
         return flask.redirect(flask.url_for('register'))
 
@@ -340,12 +339,6 @@ def allowed_file(filename):
 def hello():
     return render_template('hello.html', message='Welecome to Photoshare')
 
-@app.route("/global", methods=['POST'])
-def likes():
-    if request.method == 'POST':
-        print("yeet!")
-        if request.form.get("like") == "like":
-            print("yeet!")
 
 
 if __name__ == "__main__":

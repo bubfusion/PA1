@@ -23,7 +23,6 @@ def user_commented(picture_id):
     uid = main.getUserIdFromEmail(flask_login.current_user.id)
     date = datetime.date.today()
     text = request.form.get("comment")
-    print("hello!")
     cursor.execute('''INSERT INTO Comments (user_id, date, picture_id, text) VALUES (%s, %s, %s , %s )''', (uid, date, picture_id, text))
     main.conn.commit()
     return comments(picture_id)
