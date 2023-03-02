@@ -34,7 +34,7 @@ app.register_blueprint(personal_feed)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -135,7 +135,7 @@ def logout():
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return render_template('unauth.html')
-	
+    
 # you can specify specific methods (GET/POST) in function header instead of inside the functions as seen earlier
 
 
@@ -266,7 +266,7 @@ def like(picture_id):
     
 @app.route("/friends", methods=['GET'])
 def friend():
-	return render_template('friends.html')
+    return render_template('friends.html')
 
 @app.route('/friends', methods=['POST'])
 def add_friend():
