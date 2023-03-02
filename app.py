@@ -287,7 +287,6 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
     
-<<<<<<< HEAD
 @app.route("/tags/<int:picture_id>", methods=['GET'])
 def display_tag():
     tagInfo = getTags(flask_login.current_user.id)
@@ -310,36 +309,6 @@ def add_tag(picture_id):
         return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
     else:
         return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
-
-@app.route("/friends", methods=['GET'])
-def friend():
-    return render_template('friends.html')
-
-@app.route('/friends', methods=['POST'])
-def add_friend():
-    if request.method == 'POST':
-        friend = request.form.get('friends')
-        uid1 = getUserIdFromEmail(flask_login.current_user.id)
-        
-        if isEmailUnique(friend) == True:
-            return render_template('friends.html', msg = 'Email does not exist!')
-        else:
-             uid2 = getUserIdFromEmail(friend)
-        if isFriendsWith(uid1, uid2):
-            return render_template('friends.html', msg = 'You are already friends with that user')
-        else:
-            try:
-                print(cursor.execute('''INSERT INTO Friends (user_id1, user_id2) VALUES (%s, %s)''', (uid1, uid2)))
-                conn.commit()
-                return render_template('hello.html', name=flask_login.current_user.id, message='Friend added!', photos=getUsersPhotos(uid1), base64=base64)
-            except:
-                return render_template('friends.html', msg = 'Can not friend yourself!')
-       
-    # The method is GET so we return a  HTML form to upload the a photo.
-    else:
-        return render_template('friends.html')
-=======
->>>>>>> 6ae571ec87152e01e2b0fb56b32b30e1cac97f26
 
 @app.route('/profile')
 @flask_login.login_required
