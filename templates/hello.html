@@ -32,9 +32,10 @@
     {% for photo in photos %}
         <li>{{photo[2]}} 
           <a href="/likes/{{photo[1]}}" class="button" name="like">Like</a>
-          <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
           {%if current_user == photo[3] %}
             <a href="/{{photo[1]}}/delete" class="button" name="delete">Delete</a>
+          {%else%}
+            <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
           {% endif %}
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
