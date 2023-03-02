@@ -15,11 +15,13 @@ from flask import Flask, Response, request, render_template, redirect, url_for, 
 from flaskext.mysql import MySQL
 import flask_login
 from flask_login import current_user
-from upload_handling import upload_handling
-from album_creation import album_creation
-from global_feed import global_feed
-from personal_feed import personal_feed
-from comment_handling import comment_handling
+from Routing.upload_handling import upload_handling
+from Routing.album_creation import album_creation
+from Routing.global_feed import global_feed
+from Routing.personal_feed import personal_feed
+from Routing.comment_handling import comment_handling
+from Routing.album_viewing import album_viewing
+from Routing.friends_handling import friends_handling
 
 
 # for image uploading
@@ -34,6 +36,8 @@ app.register_blueprint(album_creation)
 app.register_blueprint(global_feed)
 app.register_blueprint(personal_feed)
 app.register_blueprint(comment_handling)
+app.register_blueprint(album_viewing)
+app.register_blueprint(friends_handling)
 
 
 # These will need to be changed according to your creditionals
@@ -161,7 +165,6 @@ def register_user():
         hometown = request.form.get('hometown')
     else:
         error = "Missing field/s"
-        print(request.form)
         print(error)
         return flask.redirect(flask.url_for('register'))
 
@@ -214,6 +217,11 @@ def getFeedPhotos(uid):
         feed_tuple = feed_tuple + getUsersPhotos(i[0])
     return feed_tuple
 
+def getAlbumNameFromAlbumId(album_id):
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM Albums WHERE album_id = '{0}'".format(album_id))
+    return cursor.fetchone()[0]
+
 def getUsersAlbums(uid):
     cursor = conn.cursor() 
     cursor.execute("SELECT album_id,name FROM Albums WHERE user_id = '{0}'".format(uid))
@@ -244,6 +252,11 @@ def getFirstNameFromId(id):
         "SELECT first_name  FROM Users WHERE user_id = '{0}'".format(id))
     return cursor.fetchone()[0]
 
+def getEmailFromId(id):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT email FROM Users WHERE user_id = '{0}'".format(id))
+    return cursor.fetchone()[0]
 def isIdValid(id):
     # use this to check if a email has already been registered
     cursor = conn.cursor()
@@ -274,6 +287,7 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
     
+<<<<<<< HEAD
 @app.route("/tags/<int:picture_id>", methods=['GET'])
 def display_tag():
     tagInfo = getTags(flask_login.current_user.id)
@@ -324,18 +338,24 @@ def add_friend():
     # The method is GET so we return a  HTML form to upload the a photo.
     else:
         return render_template('friends.html')
+=======
+>>>>>>> 6ae571ec87152e01e2b0fb56b32b30e1cac97f26
 
 @app.route('/profile')
 @flask_login.login_required
 def protected():
-    return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
-                           photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
+    user_id = getUserIdFromEmail(flask_login.current_user.id)
+    return redirect(url_for('user_profile', user_id = user_id))
+    #return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
+                           #photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
 
 @app.route('/profile/<int:user_id>')
 def user_profile(user_id):
      if isIdValid(user_id):
+        cursor.execute("SELECT name, album_id FROM Albums WHERE user_id = {0}".format(user_id))
+        albums = cursor.fetchall()
         return render_template('hello.html', message="Welcome to " + getFirstNameFromId(user_id) + "'s page",  
-                           photos=getUsersPhotos(user_id), base64=base64)
+                           photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id)
      else:
          return render_template('hello.html', message="Sorry! That user does not exist")
 
@@ -353,12 +373,6 @@ def allowed_file(filename):
 def hello():
     return render_template('hello.html', message='Welecome to Photoshare')
 
-@app.route("/global", methods=['POST'])
-def likes():
-    if request.method == 'POST':
-        print("yeet!")
-        if request.form.get("like") == "like":
-            print("yeet!")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+<!-- authors Brenton Babb and Raymond Chu (babbb@bu.edu, raychu@bu.edu)-->
 <!doctype html>
 
 <h2>{{ picture_id }}</h2>
@@ -5,7 +6,7 @@
 {% if comments %}
     <ul>
     {% for comments in comments %}
-            User: {{comments[1]}}<br>
+            <a href="/profile/{{comments[3]}}" class="button" name="commenter_link">User: {{comments[1]}}</a>
             Date: {{comments[2]}}<br>
             Comment: {{comments[0]}}<br>
             <br>

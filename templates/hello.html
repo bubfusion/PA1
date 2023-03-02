@@ -1,4 +1,4 @@
-<!-- author ben lawson (balawson@bu.edu) -->
+<!-- authors Brenton Babb and Raymond Chu (babbb@bu.edu, raychu@bu.edu)-->
 <!doctype html>
 {% if message %}
   <h4>{{message}}!</h4>
@@ -7,6 +7,18 @@
 {% if name %}
   <h1>Hello {{ name }}!</h1>
 {% endif %}
+
+{% if albums %}
+<h2>Albums:</h2>
+    <ul>
+    {% for albums in albums %}
+        <li>
+          <a href="/profile/{{user_id}}/{{albums[1]}}" class="button" name="album_link">{{albums[0]}}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
 
 {% if photos %}
 <h2>Photos:</h2>
@@ -30,6 +42,8 @@
     {% endfor %}
     </ul>
 {% endif %}
+
+
 
 {% if message is none %}
   <p>You should <a href='/login'>login!</a></p>

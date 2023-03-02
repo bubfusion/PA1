@@ -1,4 +1,4 @@
-<!-- author ben lawson (balawson@bu.edu) -->
+<!-- authors Brenton Babb and Raymond Chu (babbb@bu.edu, raychu@bu.edu)-->
 <head>
   {% if msg %}
   <h4>{{msg}}!</h4>
@@ -14,4 +14,16 @@
               <input type="email" name="friends" required='true' /><br />
               <input type="submit" value="Add friend!" />
           </form>
+
+          <h2>Current Friends:</h2>
+          {% if friends %}
+            <ul>
+            {% for friends in friends %}
+                    Name: {{friends[0]}}<br>
+                    Email: {{friends[1]}}<br>
+                    <br>
+            {% endfor %}
+            </ul>
+        {% endif %}
+
   </body>
