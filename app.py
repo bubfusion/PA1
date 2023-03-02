@@ -346,11 +346,15 @@ def protected():
 @app.route('/profile/<int:user_id>')
 def user_profile(user_id):
      if isIdValid(user_id):
-        cursor.execute("SELECT name, album_id FROM Albums WHERE user_id = {0}".format(user_id))
+        cursor.execute("SELECT name, album_id, user_id FROM Albums WHERE user_id = {0}".format(user_id))
         albums = cursor.fetchall()
+        try:
+            current_user = getUserIdFromEmail(flask_login.current_user.id)
+        except:
+            current_user = -1
         return render_template('hello.html', message="Welcome to " + getFirstNameFromId(user_id) + "'s page",  
                            photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id,
-                           current_user = getUserIdFromEmail(flask_login.current_user.id))
+                           current_user = current_user)
      else:
          return render_template('hello.html', message="Sorry! That user does not exist")
 
