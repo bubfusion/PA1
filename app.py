@@ -236,6 +236,11 @@ def getFirstNameFromId(id):
         "SELECT first_name  FROM Users WHERE user_id = '{0}'".format(id))
     return cursor.fetchone()[0]
 
+def getEmailFromId(id):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT email FROM Users WHERE user_id = '{0}'".format(id))
+    return cursor.fetchone()[0]
 def isIdValid(id):
     # use this to check if a email has already been registered
     cursor = conn.cursor()
@@ -268,7 +273,11 @@ def like(picture_id):
     
 @app.route("/friends", methods=['GET'])
 def friend():
-    return render_template('friends.html')
+    friendIds = getUsersFriends(getUserIdFromEmail(flask_login.current_user.id))
+    friends = []
+    for i in friendIds:
+        friends.append((getFirstNameFromId(i[0]), getEmailFromId(i[0])))
+    return render_template('friends.html', friends = friends)
 
 @app.route('/friends', methods=['POST'])
 def add_friend():
