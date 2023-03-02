@@ -307,7 +307,7 @@ def display_tag(picture_id):
     cursor = conn.cursor()
     cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
     tags = cursor.fetchall()
-    return render_template('hello.html', tags=tags, picture_id = picture_id)
+    return render_template('hello.html', display_all=tags, picture_id = picture_id)
 
 # Displays all user photos from tag  
 @app.route("/display_user/<int:picture_id>", methods=['GET'])
@@ -315,7 +315,7 @@ def display_usertag(picture_id):
     cursor = conn.cursor()
     cursor.execute("SELECT tag_id, picture_id FROM Tagged JOIN Pictures ON Pictures.picture_id = Tagged.picture_id WHERE Pictures.user_id = %s AND Tagged.picture_id = %s", (flask_login.current_user.id, picture_id))
     tags = cursor.fetchall()
-    return render_template('hello.html', tags=tags, picture_id=picture_id) 
+    return render_template('hello.html', display_usertag=tags, picture_id=picture_id) 
 
 # Adds tag to db
 @app.route("/add_tag", methods=['POST'])

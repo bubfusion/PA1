@@ -52,9 +52,17 @@
           <p> Tags:</p>
           <form method="post" action="{{ url_for('add_tag') }}">
             <button type="submit">View all</button>
+            {% for tag in display_all %}
+              <p>Tag ID: {{ tag[0] }}</p>
+              <p>Picture ID: {{ tag[1] }}</p>
+            {% endfor %}
           </form>
           <form method="post" action="{{ url_for('add_tag') }}">
             <button type="submit">View my photos</button>
+            {% for tag in display_user %}
+              <p>Tag ID: {{ tag[0] }}</p>
+              <p>Picture ID: {{ tag[1] }}</p>
+            {% endfor %}
           </form>
     <!-- search_results.html -->
 {% for result in results %}
