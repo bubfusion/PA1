@@ -21,6 +21,7 @@ from global_feed import global_feed
 from personal_feed import personal_feed
 from comment_handling import comment_handling
 
+
 # for image uploading
 import os
 import base64
@@ -33,6 +34,7 @@ app.register_blueprint(album_creation)
 app.register_blueprint(global_feed)
 app.register_blueprint(personal_feed)
 app.register_blueprint(comment_handling)
+
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -190,6 +192,12 @@ def getLikes(uid):
         "SELECT picture_id FROM Likes WHERE user_id = '{0}'".format(uid))
     return cursor.fetchall()
 
+def getTags(uid):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT picture_id, tag_id FROM Tagged WHERE user_id = '{0}'".format(uid))
+    return cursor.fetchall()
+
 def getUsersPhotos(uid):
     cursor = conn.cursor()
     cursor.execute(
@@ -266,6 +274,29 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
     
+@app.route("/tags/<int:picture_id>", methods=['GET'])
+def display_tag():
+    tagInfo = getTags(flask_login.current_user.id)
+    tags = []
+    for i in tagInfo:
+        tags.append(getTags(i[1]))
+
+    return render_template('hello.html', tags=tags)
+"""     cursor.execute("SELECT text, first_name, date FROM Comments INNER JOIN Users ON Comments.user_id = Users.user_id WHERE picture_id = {0}".format(picture_id))
+    comments = cursor.fetchall()
+    return render_template('comments.html', comments=comments, picture_id = picture_id) """
+
+@comment_handling.route('/tags/<int:picture_id>', methods=['POST'])
+def add_tag(picture_id):
+    if request.method == 'POST':
+        userid = getUserIdFromEmail(flask_login.current_user.id)
+        tag = request.form.get('tag')
+        print(cursor.execute('''INSERT INTO Tagged (tag_id, picture_id) VALUES (%s, %s)''', (tag, picture_id)))
+        conn.commit()
+        return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
+    else:
+        return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
+
 @app.route("/friends", methods=['GET'])
 def friend():
     return render_template('friends.html')
