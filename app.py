@@ -205,9 +205,8 @@ def getUsersPhotos(uid):
 def getTags(uid):
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT picture_id, tag_id FROM Tagged WHERE user_id = '{0}'".format(uid))
-    return cursor.fetchall()
-
+        "SELECT Tags.tag_name FROM Tags JOIN Tagged ON Tagged.tag_id = Tags.tag_id WHERE Tagged.user_id = '{0}'".format(uid))
+    return [row[0] for row in cursor.fetchall()]
 
 def getFeedPhotos(uid):
     cursor = conn.cursor()
@@ -287,16 +286,19 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
 
-@app.route("/popular_tags", methods=['GET'])
-def popular_tags():
-    return render_template('hello.html', name=flask_login.current_user.id, photos=getUsersPhotos(userid), base64=base64)
-
-@app.route("/search_tag", methods=['GET'])
-def search_tags(tag_id):
-    cursor = conn.cursor()
-    cursor.execute("SELECT tag_id FROM Tagged WHERE tag_id = {1}".format(tag_id))
-    tags = cursor.fetchall()
-    return render_template('hello.html')
+@app.route("/search_tag", methods=['POST'])
+def search_tag():
+    if request.method == 'POST':
+        tag = request.form['tag']
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT p.imgdata, p.caption FROM Pictures p JOIN Tagged t ON p.picture_id = t.picture_id JOIN Tags tg ON t.tag_id = tg.tag_id WHERE tg.tag_name = %s",
+            (tag,)
+        )
+        results = cursor.fetchall()
+        return render_template('hello.html', results=results)
+    else:
+        return render_template('hello.html')
                            
 @app.route("/display_tag", methods=['GET'])
 def display_tag(picture_id):
@@ -306,15 +308,36 @@ def display_tag(picture_id):
     return render_template('hello.html', tags=tags, picture_id = picture_id)
     
 
-@app.route("/add_tag", methods=['POST'])
-def add_tag(picture_id):
+@app.route('/add_tag', methods=['GET', 'POST'])
+def add_tag():
     if request.method == 'POST':
-        tag = request.form.get('tag')
-        print(cursor.execute('''INSERT INTO Tagged (tag_id, picture_id) VALUES (%s, %s)''', (tag, picture_id)))
+        # Retrieve form data
+        picture_id = request.form['picture_id']
+        tag_name = request.form['tag_name']
+        
+        # Check if tag already exists
+        cursor = conn.cursor()
+        cursor.execute("SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
+        result = cursor.fetchone()
+        
+        if result is None:
+            # Tag does not exist, so add it to Tags table
+            cursor.execute("INSERT INTO Tags (tag_name) VALUES (%s)", (tag_name,))
+            tag_id = cursor.lastrowid
+        else:
+            # Tag already exists, so retrieve its tag_id
+            tag_id = result[0]
+            
+        # Add the tag to the Tagged table
+        cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id))
         conn.commit()
-        return display_tag(picture_id)
+        
+        # Redirect to photo page
+        return redirect(url_for('view_photo', picture_id=picture_id))
     else:
-        return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
+        # Display add tag form
+        picture_id = request.args.get('picture_id')
+        return render_template('hello.html', picture_id=picture_id)
 
 
 @app.route('/profile')
