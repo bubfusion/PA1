@@ -228,6 +228,20 @@ def isFriendsWith(uid, uid2):
     else:
         return False
 
+def getFirstNameFromId(id):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT first_name  FROM Users WHERE user_id = '{0}'".format(id))
+    return cursor.fetchone()[0]
+
+def isIdValid(id):
+    # use this to check if a email has already been registered
+    cursor = conn.cursor()
+    if cursor.execute("SELECT user_id  FROM Users WHERE user_id = '{0}'".format(id)):
+        # this means there are greater than zero entries with that email
+        return True
+    else:
+        return False
 
 def isEmailUnique(email):
     # use this to check if a email has already been registered
@@ -283,6 +297,14 @@ def add_friend():
 def protected():
     return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
                            photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
+
+@app.route('/profile/<int:user_id>')
+def user_profile(user_id):
+     if isIdValid(user_id):
+        return render_template('hello.html', message="Welcome to " + getFirstNameFromId(user_id) + "'s page",  
+                           photos=getUsersPhotos(user_id), base64=base64)
+     else:
+         return render_template('hello.html', message="Sorry! That user does not exist")
 
 
 # begin photo uploading code
