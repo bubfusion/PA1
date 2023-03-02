@@ -348,7 +348,7 @@ def popular_tags():
 
     cur.close()
     conn.close()
-    return render_template('home.html', popular_tags=popular_tags)
+    return render_template('hello.html', popular_tags=popular_tags)
 
 
 
