@@ -32,7 +32,7 @@ app.register_blueprint(album_creation)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -46,7 +46,7 @@ conn = mysql.connect()
 cursor = conn.cursor()
 cursor.execute("SELECT email from Users")
 users = cursor.fetchall()
-friends = []
+
 
 
 def getUserList():
@@ -236,8 +236,18 @@ def isEmailUnique(email):
     else:
         return True
 # end login code
+@app.route("/likes", methods=['GET'])
+def like():
+	return render_template('friends.html')
 
-
+@app.route("/likes", methods=['POST'])
+def addLike():
+    if request.method == 'POST':
+        userid = getUsersPhotos(uid)
+        print(cursor.execute('''INSERT INTO Likes (user_id, picture_id) VALUES (%s, %s)''', (uid1, uid2)))
+        conn.commit()
+        return render_template('hello.html', name=flask_login.current_user.id, message='Like added!', photos=getUsersPhotos(uid1), base64=base64)
+    
 @app.route("/friends", methods=['GET'])
 def friend():
 	return render_template('friends.html')
