@@ -293,7 +293,7 @@ def display_tag(picture_id):
     return render_template('hello.html', tags=tags, picture_id = picture_id)
     
 
-@comment_handling.route('/tags/<int:picture_id>', methods=['POST'])
+@app.route('/tags/<int:picture_id>', methods=['POST'])
 def search_tag(picture_id):
     if request.method == 'POST':
         tag = request.form.get('tag')
