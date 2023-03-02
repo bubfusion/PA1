@@ -23,6 +23,7 @@ from Routing.comment_handling import comment_handling
 from Routing.album_viewing import album_viewing
 from Routing.friends_handling import friends_handling
 
+
 # for image uploading
 import os
 import base64
@@ -37,6 +38,7 @@ app.register_blueprint(personal_feed)
 app.register_blueprint(comment_handling)
 app.register_blueprint(album_viewing)
 app.register_blueprint(friends_handling)
+
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -193,6 +195,12 @@ def getLikes(uid):
         "SELECT picture_id FROM Likes WHERE user_id = '{0}'".format(uid))
     return cursor.fetchall()
 
+def getTags(uid):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT picture_id, tag_id FROM Tagged WHERE user_id = '{0}'".format(uid))
+    return cursor.fetchall()
+
 def getUsersPhotos(uid):
     cursor = conn.cursor()
     cursor.execute(
@@ -279,6 +287,59 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
     
+<<<<<<< HEAD
+@app.route("/tags/<int:picture_id>", methods=['GET'])
+def display_tag():
+    tagInfo = getTags(flask_login.current_user.id)
+    tags = []
+    for i in tagInfo:
+        tags.append(getTags(i[1]))
+
+    return render_template('hello.html', tags=tags)
+"""     cursor.execute("SELECT text, first_name, date FROM Comments INNER JOIN Users ON Comments.user_id = Users.user_id WHERE picture_id = {0}".format(picture_id))
+    comments = cursor.fetchall()
+    return render_template('comments.html', comments=comments, picture_id = picture_id) """
+
+@comment_handling.route('/tags/<int:picture_id>', methods=['POST'])
+def add_tag(picture_id):
+    if request.method == 'POST':
+        userid = getUserIdFromEmail(flask_login.current_user.id)
+        tag = request.form.get('tag')
+        print(cursor.execute('''INSERT INTO Tagged (tag_id, picture_id) VALUES (%s, %s)''', (tag, picture_id)))
+        conn.commit()
+        return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
+    else:
+        return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
+
+@app.route("/friends", methods=['GET'])
+def friend():
+    return render_template('friends.html')
+
+@app.route('/friends', methods=['POST'])
+def add_friend():
+    if request.method == 'POST':
+        friend = request.form.get('friends')
+        uid1 = getUserIdFromEmail(flask_login.current_user.id)
+        
+        if isEmailUnique(friend) == True:
+            return render_template('friends.html', msg = 'Email does not exist!')
+        else:
+             uid2 = getUserIdFromEmail(friend)
+        if isFriendsWith(uid1, uid2):
+            return render_template('friends.html', msg = 'You are already friends with that user')
+        else:
+            try:
+                print(cursor.execute('''INSERT INTO Friends (user_id1, user_id2) VALUES (%s, %s)''', (uid1, uid2)))
+                conn.commit()
+                return render_template('hello.html', name=flask_login.current_user.id, message='Friend added!', photos=getUsersPhotos(uid1), base64=base64)
+            except:
+                return render_template('friends.html', msg = 'Can not friend yourself!')
+       
+    # The method is GET so we return a  HTML form to upload the a photo.
+    else:
+        return render_template('friends.html')
+=======
+>>>>>>> 6ae571ec87152e01e2b0fb56b32b30e1cac97f26
 
 @app.route('/profile')
 @flask_login.login_required
