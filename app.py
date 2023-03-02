@@ -284,7 +284,7 @@ def like(picture_id):
         print(cursor.execute('''DELETE FROM Likes WHERE user_id = {0} AND picture_id = {1}'''.format(userid, picture_id)))
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
- 
+    
 @app.route("/tags/<int:picture_id>", methods=['GET'])
 def display_tag(picture_id):
     cursor = conn.cursor()
@@ -301,7 +301,7 @@ def search_tag(picture_id):
         conn.commit()
         return display_tag(picture_id)
     else:
-        return render_template('hello.html', name=flask_login.current_user.id, photos=getUsersPhotos(userid), base64=base64)
+        return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
 
 @app.route('/profile')
 @flask_login.login_required
