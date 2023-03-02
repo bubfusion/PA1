@@ -284,17 +284,28 @@ def like(picture_id):
         print(cursor.execute('''DELETE FROM Likes WHERE user_id = {0} AND picture_id = {1}'''.format(userid, picture_id)))
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
-    
+
 @app.route("/tags/<int:picture_id>", methods=['GET'])
+def popular_tags():
+    return render_template('hello.html', name=flask_login.current_user.id, photos=getUsersPhotos(userid), base64=base64)
+
+@app.route("/search_tag", methods=['GET'])
+def search_tags(tag_id):
+    cursor = conn.cursor()
+    cursor.execute("SELECT tag_id FROM Tagged WHERE tag_id = {1}".format(tag_id))
+    tags = cursor.fetchall()
+    return render_template('hello.html')
+                           
+@app.route("/add_tag", methods=['GET'])
 def display_tag(picture_id):
     cursor = conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM WHERE tag_id = {0} and picture_id = {1}".format(tag_id,picture_id))
+    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
     tags = cursor.fetchall()
     return render_template('hello.html', tags=tags, picture_id = picture_id)
     
 
 @app.route('/tags/<int:picture_id>', methods=['POST'])
-def search_tag(picture_id):
+def add_tag(picture_id):
     if request.method == 'POST':
         tag = request.form.get('tag')
         print(cursor.execute('''INSERT INTO Tagged (tag_id, picture_id) VALUES (%s, %s)''', (tag, picture_id)))
@@ -302,6 +313,7 @@ def search_tag(picture_id):
         return display_tag(picture_id)
     else:
         return render_template('hello.html', name=flask_login.current_user.id, message='Tag added!', photos=getUsersPhotos(userid), base64=base64)
+
 
 @app.route('/profile')
 @flask_login.login_required
