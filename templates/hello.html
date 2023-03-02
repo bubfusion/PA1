@@ -26,6 +26,11 @@
 {% if photos %}
 <h3>Popular tags:</h3>
 <ul>
+  {% for tag in popular_tags %}
+    <li>{{ tag[0] }} ({{ tag[1] }} photos)</li>
+  {% endfor %}
+</ul>
+<ul>
   <form action="{{ url_for('search_tag') }}" method="post">
     <label for="tag">Search photo by tag:</label>
     <input type="text" id="tag" name="tag">

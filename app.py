@@ -11,6 +11,7 @@
 
 import datetime
 import flask
+import psycopg2
 from flask import Flask, Response, request, render_template, redirect, url_for, Blueprint
 from flaskext.mysql import MySQL
 import flask_login
@@ -315,7 +316,7 @@ def display_usertag(picture_id):
     cursor = conn.cursor()
     cursor.execute("SELECT tag_id, picture_id FROM Tagged JOIN Pictures ON Pictures.picture_id = Tagged.picture_id WHERE Pictures.user_id = %s AND Tagged.picture_id = %s", (flask_login.current_user.id, picture_id))
     tags = cursor.fetchall()
-    return render_template('hello.html', display_usertag=tags, picture_id=picture_id) 
+    return render_template('hello.html', display_user=tags, picture_id=picture_id) 
 
 # Adds tag to db
 @app.route("/add_tag", methods=['POST'])
@@ -334,6 +335,20 @@ def add_tag():
 
     return render_template('hello.html')
                            
+@app.route('/popular_tags')
+def popular_tags():
+    conn = psycopg2.connect(database="photoshare", user="username", password="password", host="localhost", port="5432")
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT Tags.name, COUNT(*) as tag_count FROM Tagged INNER JOIN Tags ON Tagged.tag_id = Tags.tag_id GROUP BY Tags.name ORDER BY tag_count DESC LIMIT 3;
+    """)
+
+    popular_tags = cur.fetchall()
+
+    cur.close()
+    conn.close()
+    return render_template('home.html', popular_tags=popular_tags)
 
 
 
