@@ -12,8 +12,8 @@
 <h2>Photos:</h2>
     <ul>
     {% for photo in photos %}
-
-        <li>{{photo[2]}}<br>
+        <li>{{photo[2]}} 
+          <a href="/likes/{{photo[1]}}" class="button" name="Like">like</a><br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
     {% endfor %}
     </ul>

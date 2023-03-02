@@ -252,17 +252,17 @@ def isEmailUnique(email):
     else:
         return True
 # end login code
-@app.route("/likes", methods=['GET'])
-def like():
-	return render_template('friends.html')
-
-@app.route("/likes", methods=['POST'])
-def addLike():
-    if request.method == 'POST':
-        userid = getUsersPhotos(uid)
-        print(cursor.execute('''INSERT INTO Likes (user_id, picture_id) VALUES (%s, %s)''', (uid1, uid2)))
+@app.route("/likes/<int:picture_id>", methods=['GET'])
+def like(picture_id):
+    userid = getUserIdFromEmail(flask_login.current_user.id)
+    try:
+        print(cursor.execute('''INSERT INTO Likes (user_id, picture_id) VALUES (%s, %s)''', (userid, picture_id)))
         conn.commit()
-        return render_template('hello.html', name=flask_login.current_user.id, message='Like added!', photos=getUsersPhotos(uid1), base64=base64)
+        return render_template('hello.html', name=flask_login.current_user.id, message='Like added!', photos=getUsersPhotos(userid), base64=base64)
+    except:
+        print(cursor.execute('''DELETE FROM Likes WHERE user_id = {0} AND picture_id = {1}'''.format(userid, picture_id)))
+        conn.commit()
+        return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
     
 @app.route("/friends", methods=['GET'])
 def friend():
@@ -319,6 +319,13 @@ def allowed_file(filename):
 @app.route("/", methods=['GET'])
 def hello():
     return render_template('hello.html', message='Welecome to Photoshare')
+
+@app.route("/global", methods=['POST'])
+def likes():
+    if request.method == 'POST':
+        print("yeet!")
+        if request.form.get("like") == "like":
+            print("yeet!")
 
 
 if __name__ == "__main__":
