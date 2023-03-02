@@ -22,6 +22,7 @@ from Routing.personal_feed import personal_feed
 from Routing.comment_handling import comment_handling
 from Routing.album_viewing import album_viewing
 from Routing.friends_handling import friends_handling
+from Routing.deletion_handling import deletion_handling
 
 # for image uploading
 import os
@@ -37,10 +38,11 @@ app.register_blueprint(personal_feed)
 app.register_blueprint(comment_handling)
 app.register_blueprint(album_viewing)
 app.register_blueprint(friends_handling)
+app.register_blueprint(deletion_handling)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)

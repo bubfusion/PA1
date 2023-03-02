@@ -1,5 +1,3 @@
-DROP TABLE Comments;
-
 CREATE DATABASE IF NOT EXISTS photoshare;
 USE photoshare;
 DROP TABLE IF EXISTS Pictures CASCADE;
@@ -93,8 +91,8 @@ CREATE TRIGGER commentingOwnPost BEFORE INSERT ON Comments
 FOR EACH ROW
 BEGIN
    SET @picture_user_id = (SELECT user_id FROM Pictures WHERE picture_id = NEW.picture_id);
-   IF NEW.user_id = picture_user_id THEN
-		CALL RAISE_APPLICATION_ERROR(-20999, "Can't friend self!");
+   IF NEW.user_id = @picture_user_id THEN
+		CALL RAISE_APPLICATION_ERROR(-20999, "Can't comment on own post!");
    END IF;
 END$$
 DELIMITER ;
