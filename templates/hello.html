@@ -21,8 +21,14 @@
 
 
 {% if photos %}
+<h3>Popular tags:</h3>
+<ul>
+  <form method="post" action="/search_tag">
+    <label for="search">Search a tag:</label>
+    <input type="text" name="tag" required='true' />
+    <input type="submit" />
+  </form>
 <h2>Photos:</h2>
-    <ul>
     {% for photo in photos %}
         <li>{{photo[2]}} 
           <a href="/likes/{{photo[1]}}" class="button" name="like">Like</a>
@@ -30,7 +36,7 @@
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
         <form method="post" action="/add_tag">
-          <label for="search">Add a tag to your photo:</label>
+          <label for="search">Add a tag:</label>
           <input type="text" name="tag" required='true' />
           <input type="submit" />
         </form>
