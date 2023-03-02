@@ -21,6 +21,7 @@ from Routing.global_feed import global_feed
 from Routing.personal_feed import personal_feed
 from Routing.comment_handling import comment_handling
 from Routing.album_viewing import album_viewing
+from Routing.friends_handling import friends_handling
 
 # for image uploading
 import os
@@ -35,6 +36,7 @@ app.register_blueprint(global_feed)
 app.register_blueprint(personal_feed)
 app.register_blueprint(comment_handling)
 app.register_blueprint(album_viewing)
+app.register_blueprint(friends_handling)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -277,37 +279,6 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
     
-@app.route("/friends", methods=['GET'])
-def friend():
-    friendIds = getUsersFriends(getUserIdFromEmail(flask_login.current_user.id))
-    friends = []
-    for i in friendIds:
-        friends.append((getFirstNameFromId(i[0]), getEmailFromId(i[0])))
-    return render_template('friends.html', friends = friends)
-
-@app.route('/friends', methods=['POST'])
-def add_friend():
-    if request.method == 'POST':
-        friend = request.form.get('friends')
-        uid1 = getUserIdFromEmail(flask_login.current_user.id)
-        
-        if isEmailUnique(friend) == True:
-            return render_template('friends.html', msg = 'Email does not exist!')
-        else:
-             uid2 = getUserIdFromEmail(friend)
-        if isFriendsWith(uid1, uid2):
-            return render_template('friends.html', msg = 'You are already friends with that user')
-        else:
-            try:
-                print(cursor.execute('''INSERT INTO Friends (user_id1, user_id2) VALUES (%s, %s)''', (uid1, uid2)))
-                conn.commit()
-                return render_template('hello.html', name=flask_login.current_user.id, message='Friend added!', photos=getUsersPhotos(uid1), base64=base64)
-            except:
-                return render_template('friends.html', msg = 'Can not friend yourself!')
-       
-    # The method is GET so we return a  HTML form to upload the a photo.
-    else:
-        return render_template('friends.html')
 
 @app.route('/profile')
 @flask_login.login_required
