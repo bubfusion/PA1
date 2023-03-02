@@ -34,7 +34,7 @@ app.register_blueprint(personal_feed)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -135,7 +135,7 @@ def logout():
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return render_template('unauth.html')
-	
+    
 # you can specify specific methods (GET/POST) in function header instead of inside the functions as seen earlier
 
 
@@ -239,20 +239,26 @@ def isEmailUnique(email):
         return True
 # end login code
 @app.route("/likes", methods=['GET'])
+@flask_login.login_required
 def like():
-	return render_template('friends.html')
-
+     uid = getUsersPhotos(flask_login.current_user.id)
+     likes = getLikes(flask_login.current_user.id)
+     return render_template('hello.html', likes = likes, message = 'Like added!')
 @app.route("/likes", methods=['POST'])
 def addLike():
     if request.method == 'POST':
-        userid = getUsersPhotos(uid)
-        print(cursor.execute('''INSERT INTO Likes (user_id, picture_id) VALUES (%s, %s)''', (uid1, uid2)))
+        photo = request.files['photo']
+        uid = getUserIdFromEmail(flask_login.current_user.id)
+        cursor = conn.cursor()
+        cursor.execute
+        print(cursor.execute('''INSERT INTO Likes (user_id, picture_id) VALUES (%s, %s)''', (photo, uid)))
         conn.commit()
-        return render_template('hello.html', name=flask_login.current_user.id, message='Like added!', photos=getUsersPhotos(uid1), base64=base64)
-    
+        return render_template('hello.html', name=flask_login.current_user.id, message='Friend added!', photos=getUsersPhotos(uid1), base64=base64)
+          
+        
 @app.route("/friends", methods=['GET'])
 def friend():
-	return render_template('friends.html')
+    return render_template('friends.html')
 
 @app.route('/friends', methods=['POST'])
 def add_friend():

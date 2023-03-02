@@ -87,7 +87,3 @@ CREATE TABLE Tagged(
     FOREIGN KEY (tag_id) REFERENCES Tags(tag_id),
     PRIMARY KEY(picture_id, tag_id)
 );
-
-
-INSERT INTO Users (email, password, dob, first_name) VALUES ('test@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
-INSERT INTO Users (email, password, dob, first_name) VALUES ('test2@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
