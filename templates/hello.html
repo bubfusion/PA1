@@ -14,7 +14,11 @@
     {% for photo in photos %}
 
         <li>{{photo[2]}}<br>
+          <form method="post" action="/likes">
+            <input type="submit" value="Like" />
+        </form>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
+
     {% endfor %}
     </ul>
 {% endif %}
