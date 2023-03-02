@@ -18,7 +18,7 @@ from flask_login import current_user
 from upload_handling import upload_handling
 from album_creation import album_creation
 from global_feed import global_feed
-
+from personal_feed import personal_feed
 
 # for image uploading
 import os
@@ -30,6 +30,7 @@ app.secret_key = 'CS460'
 app.register_blueprint(upload_handling)
 app.register_blueprint(album_creation)
 app.register_blueprint(global_feed)
+app.register_blueprint(personal_feed)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -281,7 +282,7 @@ def add_friend():
 @flask_login.login_required
 def protected():
     return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
-                           photos=getFeedPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
+                           photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
 
 
 # begin photo uploading code
