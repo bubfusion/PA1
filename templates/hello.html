@@ -8,6 +8,18 @@
   <h1>Hello {{ name }}!</h1>
 {% endif %}
 
+{% if albums %}
+<h2>Albums:</h2>
+    <ul>
+    {% for albums in albums %}
+        <li>
+          <a href="/profile/{{user_id}}/{{albums[1]}}" class="button" name="album_link">{{albums[0]}}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+
 {% if photos %}
 <h2>Photos:</h2>
     <ul>
@@ -17,12 +29,11 @@
           <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
-        {% for people in likes %}
-          <li>{{people[2]}}<br>
-            {% endfor %}
     {% endfor %}
     </ul>
 {% endif %}
+
+
 
 {% if message is none %}
   <p>You should <a href='/login'>login!</a></p>

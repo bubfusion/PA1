@@ -312,8 +312,10 @@ def protected():
 @app.route('/profile/<int:user_id>')
 def user_profile(user_id):
      if isIdValid(user_id):
+        cursor.execute("SELECT name, album_id FROM Albums WHERE user_id = {0}".format(user_id))
+        albums = cursor.fetchall()
         return render_template('hello.html', message="Welcome to " + getFirstNameFromId(user_id) + "'s page",  
-                           photos=getUsersPhotos(user_id), base64=base64)
+                           photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id)
      else:
          return render_template('hello.html', message="Sorry! That user does not exist")
 
