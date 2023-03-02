@@ -198,8 +198,8 @@ def getLikes(uid):
 def getUsersPhotos(uid):
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT imgdata, picture_id, caption FROM Pictures WHERE user_id = '{0}'".format(uid))
-    # NOTE return a list of tuples, [(imgdata, pid, caption), ...]
+        "SELECT imgdata, picture_id, caption, user_id FROM Pictures WHERE user_id = '{0}'".format(uid))
+    # NOTE return a list of tuples, [(imgdata, pid, caption, user_id), ...]
     return cursor.fetchall()
 
 def getTags(uid):
@@ -287,7 +287,7 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
 
-@app.route("popular_tags", methods=['GET'])
+@app.route("/popular_tags", methods=['GET'])
 def popular_tags():
     return render_template('hello.html', name=flask_login.current_user.id, photos=getUsersPhotos(userid), base64=base64)
 
@@ -322,8 +322,6 @@ def add_tag(picture_id):
 def protected():
     user_id = getUserIdFromEmail(flask_login.current_user.id)
     return redirect(url_for('user_profile', user_id = user_id))
-    #return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
-                           #photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
 
 @app.route('/profile/<int:user_id>')
 def user_profile(user_id):
@@ -331,7 +329,8 @@ def user_profile(user_id):
         cursor.execute("SELECT name, album_id FROM Albums WHERE user_id = {0}".format(user_id))
         albums = cursor.fetchall()
         return render_template('hello.html', message="Welcome to " + getFirstNameFromId(user_id) + "'s page",  
-                           photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id)
+                           photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id,
+                           current_user = getUserIdFromEmail(flask_login.current_user.id))
      else:
          return render_template('hello.html', message="Sorry! That user does not exist")
 

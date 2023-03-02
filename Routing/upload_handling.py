@@ -32,13 +32,10 @@ def upload_file():
         albums = request.form.get('albums')
         cursor = main.conn.cursor()
         if albums is None:
-            return render_template('hello.html', name=main.flask_login.current_user.id, message='Error uploading! Please create an album', photos=main.getUsersPhotos(uid), base64=base64)
-        
+            return render_template('hello.html', name=main.flask_login.current_user.id, message='Error uploading! Please create an album')
         cursor.execute(
             '''INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES (%s, %s, %s, %s)''', (photo_data, uid, caption, albums))
         main.conn.commit()
-        return render_template('hello.html', name=main.flask_login.current_user.id, message='Photo uploaded!', photos=main.getUsersPhotos(uid), base64=base64)
-    # The method is GET so we return a  HTML form to upload the a photo.
+        return render_template('hello.html', message="Photo uploaded!")
     else:
         return render_template('upload.html')
-# end photo uploading code
