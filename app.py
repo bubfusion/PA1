@@ -22,6 +22,7 @@ from Routing.personal_feed import personal_feed
 from Routing.comment_handling import comment_handling
 from Routing.album_viewing import album_viewing
 from Routing.friends_handling import friends_handling
+from Routing.deletion_handling import deletion_handling
 
 # for image uploading
 import os
@@ -37,10 +38,11 @@ app.register_blueprint(personal_feed)
 app.register_blueprint(comment_handling)
 app.register_blueprint(album_viewing)
 app.register_blueprint(friends_handling)
+app.register_blueprint(deletion_handling)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -196,8 +198,8 @@ def getLikes(uid):
 def getUsersPhotos(uid):
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT imgdata, picture_id, caption FROM Pictures WHERE user_id = '{0}'".format(uid))
-    # NOTE return a list of tuples, [(imgdata, pid, caption), ...]
+        "SELECT imgdata, picture_id, caption, user_id FROM Pictures WHERE user_id = '{0}'".format(uid))
+    # NOTE return a list of tuples, [(imgdata, pid, caption, user_id), ...]
     return cursor.fetchall()
 
 def getTags(uid):
@@ -343,8 +345,6 @@ def add_tag():
 def protected():
     user_id = getUserIdFromEmail(flask_login.current_user.id)
     return redirect(url_for('user_profile', user_id = user_id))
-    #return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
-                           #photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
 
 @app.route('/profile/<int:user_id>')
 def user_profile(user_id):
@@ -352,7 +352,8 @@ def user_profile(user_id):
         cursor.execute("SELECT name, album_id FROM Albums WHERE user_id = {0}".format(user_id))
         albums = cursor.fetchall()
         return render_template('hello.html', message="Welcome to " + getFirstNameFromId(user_id) + "'s page",  
-                           photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id)
+                           photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id,
+                           current_user = getUserIdFromEmail(flask_login.current_user.id))
      else:
          return render_template('hello.html', message="Sorry! That user does not exist")
 
