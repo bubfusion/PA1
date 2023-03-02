@@ -51,7 +51,6 @@ CREATE TABLE Comments(
     text VARCHAR(255),
     user_id int4 NOT NULL,
     picture_id int4 NOT NULL,
-    CHECK(user_id <> picture_id.user_id),
     PRIMARY KEY(commentid),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
 	FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE

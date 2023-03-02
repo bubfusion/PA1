@@ -1,0 +1,26 @@
+<!doctype html>
+
+<h2>{{ picture_id }}</h2>
+<h2>Comments:</h2>
+{% if comments %}
+    <ul>
+    {% for comments in comments %}
+            User: {{comments[1]}}<br>
+            Date: {{comments[2]}}<br>
+            Comment: {{comments[0]}}<br>
+            <br>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+</div>
+<form method="post" action= "/comments/{{ picture_id }}">
+    <label for="comment">Comment:</label>
+    <input type="text" name="comment" required = /><br />
+    <input type="submit" />
+</form>
+
+
+
+
+

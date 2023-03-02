@@ -19,6 +19,7 @@ from upload_handling import upload_handling
 from album_creation import album_creation
 from global_feed import global_feed
 from personal_feed import personal_feed
+from comment_handling import comment_handling
 
 # for image uploading
 import os
@@ -31,10 +32,11 @@ app.register_blueprint(upload_handling)
 app.register_blueprint(album_creation)
 app.register_blueprint(global_feed)
 app.register_blueprint(personal_feed)
+app.register_blueprint(comment_handling)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
