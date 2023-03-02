@@ -20,6 +20,7 @@ from album_creation import album_creation
 from global_feed import global_feed
 from personal_feed import personal_feed
 from comment_handling import comment_handling
+from album_viewing import album_viewing
 
 # for image uploading
 import os
@@ -33,6 +34,7 @@ app.register_blueprint(album_creation)
 app.register_blueprint(global_feed)
 app.register_blueprint(personal_feed)
 app.register_blueprint(comment_handling)
+app.register_blueprint(album_viewing)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -205,6 +207,11 @@ def getFeedPhotos(uid):
     for i in friends:
         feed_tuple = feed_tuple + getUsersPhotos(i[0])
     return feed_tuple
+
+def getAlbumNameFromAlbumId(album_id):
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM Albums WHERE album_id = '{0}'".format(album_id))
+    return cursor.fetchone()[0]
 
 def getUsersAlbums(uid):
     cursor = conn.cursor() 
