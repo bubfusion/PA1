@@ -12,7 +12,8 @@ global_feed = Blueprint('global_feed', __name__, template_folder='templates')
 
 @global_feed.route('/global', methods=['GET'])
 def feed():
+    current_user = main.getUserIdFromEmail(flask_login.current_user.id)
     cursor = main.conn.cursor()
     cursor.execute("SELECT imgdata, picture_id, caption, user_id FROM Pictures")
     photos = cursor.fetchall()
-    return render_template('hello.html', message='Global feed', photos=photos, base64=base64)
+    return render_template('hello.html', message='Global feed', photos=photos, base64=base64, current_user = current_user)
