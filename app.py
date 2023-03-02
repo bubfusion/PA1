@@ -312,8 +312,10 @@ def add_friend():
 @app.route('/profile')
 @flask_login.login_required
 def protected():
-    return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
-                           photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
+    user_id = getUserIdFromEmail(flask_login.current_user.id)
+    return redirect(url_for('user_profile', user_id = user_id))
+    #return render_template('hello.html', name=flask_login.current_user.id, message="Here's your profile", 
+                           #photos=getUsersPhotos(getUserIdFromEmail(flask_login.current_user.id)), base64=base64)
 
 @app.route('/profile/<int:user_id>')
 def user_profile(user_id):
