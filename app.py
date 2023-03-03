@@ -202,8 +202,8 @@ def getUsersPhotos(uid):
         "SELECT imgdata, picture_id, caption, user_id FROM Pictures WHERE user_id = '{0}'".format(uid))
     # NOTE return a list of tuples, [(imgdata, pid, caption, user_id), ...]
     photo_list = list(cursor.fetchall())
-    photo_list[0] = photo_list[0] + (getNumLike(photo_list[0][1]),)
-    print(photo_list)
+    if(len(photo_list) > 0):
+            photo_list[0] = photo_list[0] + (getNumLike(photo_list[0][1]),)
     return photo_list
 
 def getTags(uid):
