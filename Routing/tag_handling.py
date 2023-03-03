@@ -5,7 +5,6 @@ from flask_login import current_user
 import os
 import base64
 import app as main
-import psycopg2
 
 tag_handling = Blueprint('tag_handling', __name__, template_folder='templates')
 # Displays all photos from tag search  
@@ -53,15 +52,11 @@ def add_tag():
     return render_template('tags.html')
                            
 def popular_tags():
-    conn = psycopg2.connect(database="photoshare", user="username", password="password", host="localhost", port="5432")
-    cur = conn.cursor()
+    cur = main.conn.cursor()
 
     cur.execute("""
         SELECT Tags.name, COUNT(*) as tag_count FROM Tagged INNER JOIN Tags ON Tagged.tag_id = Tags.tag_id GROUP BY Tags.name ORDER BY tag_count DESC LIMIT 3;
     """)
 
     popular_tags = cur.fetchall()
-
-    cur.close()
-    conn.close()
     return render_template('tags.html', popular_tags=popular_tags)
