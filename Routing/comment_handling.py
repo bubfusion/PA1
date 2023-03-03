@@ -29,3 +29,16 @@ def user_commented(picture_id):
         return comments(picture_id, "Comment added")
     except:
         return comments(picture_id, "You can not comment on your own post")
+
+@comment_handling.route('/comment_search', methods=['GET'])
+def comment_search():
+    return render_template('comment_search.html')
+
+@comment_handling.route('/comment_search', methods=['POST'])
+def grab_comments():
+    text = str(request.form.get("comment"))
+    cursor = main.conn.cursor()
+    #[(user_id, date, text, imgdata)]
+    cursor.execute("SELECT Comments.user_id, Comments.date, Comments.text, Pictures.imgdata FROM Comments INNER JOIN Pictures ON Comments.picture_id = Pictures.picture_id WHERE text = '{0}'".format(text))
+    comments = cursor.fetchall()
+    return render_template('comment_search.html', comments = comments, base64 = base64)

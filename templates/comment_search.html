@@ -1,0 +1,29 @@
+<!-- authors Brenton Babb and Raymond Chu (babbb@bu.edu, raychu@bu.edu)-->
+<head>
+  {% if msg %}
+  <h4>{{msg}}!</h4>
+  {% endif %}
+  <title>Comment Search</title>
+</head>
+<body>
+    <div class="title">
+        <h1>Your friends!</h1>
+    </div>
+        <form method="post" action="/comment_search">
+            <label for="comment">Search for a comment:</label>
+            <input type="text" name="comment" required='true' /><br />
+            <input type="submit" value="Search for comment!" />
+        </form>
+        {% if comments %}
+        <ul>
+        <h3>Corresponding comments:<br></h3>
+        {% for comments in comments %}
+                <a href="/profile/{{comments[0]}}" class="button" name="commenter_link">User: {{comments[0]}}</a><br>
+                Date: {{comments[1]}}<br>
+                Comment: {{comments[2]}}<br>
+                <img src='data:image/jpg;base64, {{ base64.b64encode(comments[3]).decode("ascii") }}'/>
+                <br>
+        {% endfor %}
+        </ul>
+    {% endif %}
+<body>
