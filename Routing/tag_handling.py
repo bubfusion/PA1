@@ -7,6 +7,7 @@ import base64
 import app as main
 tag_handling = Blueprint('tag_handling', __name__, template_folder='templates')
 # Displays all photos from tag search  
+@tag_handling.route('/tag_handling.search_tag/', methods=['POST'])
 def search_tag():
     if request.method == 'POST':
         tag = request.form['tag']

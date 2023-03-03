@@ -5,7 +5,11 @@
     <li>{{ tag[0] }} ({{ tag[1] }} photos)</li>
   {% endfor %}
 </ul>
-
+<form action="{{ url_for('tag_handling.search_tag') }}" method="post">
+    <label for="tag">Search photo by tag:</label>
+    <input type="text" id="tag" name="tag">
+    <button type="submit">Search</button>
+  </form>
 <button type="submit">View all</button>
 {% for tag in display_all %}
 <p>Tag ID: {{ tag[0] }}</p>
