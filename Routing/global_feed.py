@@ -19,5 +19,4 @@ def feed():
 
     for i in range(0,len(photos)):
         photos[i] = photos[i] + (main.getNumLike(photos[i][1]),)
-    print(photos)
     return render_template('hello.html', message='Global feed', photos=photos, base64=base64, current_user = current_user)

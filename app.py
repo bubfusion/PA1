@@ -345,7 +345,7 @@ def user_profile(user_id):
             current_user = -1
         return render_template('hello.html', message="Welcome to " + getFirstNameFromId(user_id) + "'s page",  
                            photos=getUsersPhotos(user_id), base64=base64, albums = albums, user_id = user_id,
-                           current_user = current_user)
+                           current_user = current_user, contribution_score = getContributionScore(user_id))
      else:
          return render_template('hello.html', message="Sorry! That user does not exist")
 
