@@ -23,7 +23,7 @@ def search_tag():
 # Displays all photos from tag           
 def display_allphotos(picture_id):
     cursor = main.conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
+    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {0}".format(picture_id))
     tags = cursor.fetchall()
     return render_template('tags.html', display_allphotos=tags, picture_id = picture_id)
 
@@ -34,28 +34,14 @@ def display_userphotos(picture_id):
     tags = cursor.fetchall()
     return render_template('tags.html', display_userphotos=tags, picture_id=picture_id) 
 
-
+#display tags already added to db for given picture
 @tag_handling.route('/tags/<int:picture_id>', methods=['GET'])
 def display_tags(picture_id):
     cursor = main.conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
+    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {0}".format(picture_id))
     tags = cursor.fetchall()
     return render_template('tags.html', display_tags = tags, picture_id = picture_id)
-# Adds tag to db
-def add_tag():
-    tag_name = request.form['tag_name']
-    picture_id = request.form['picture_id']
 
-    # Insert tag into Tags table
-    cursor = main.conn.cursor()
-    cursor.execute("INSERT INTO Tags (name) VALUES (%s)", (tag_name,))
-    tag_id = cursor.fetchall()
-
-    # Associate tag with picture in Tagged table
-    cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id))
-    main.conn.commit()
-
-    return render_template('tags.html')
                            
 def popular_tags():
     cur = main.conn.cursor()
