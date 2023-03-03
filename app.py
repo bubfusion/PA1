@@ -283,6 +283,16 @@ def getNumLike(picture_id):
     cursor.execute("SELECT COUNT(user_id) FROM Likes WHERE picture_id = {0}".format(picture_id))
     return(cursor.fetchone()[0])
 
+def getContributionScore(uid):
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(user_id) FROM Likes WHERE user_id = {0}".format(uid))
+    total_likes = cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(user_id) FROM Comments WHERE user_id = {0}".format(uid))
+    total_comments = cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(user_id) FROM Pictures WHERE user_id = {0}".format(uid))
+    total_posts = cursor.fetchone()[0]
+    return(total_likes + total_comments + total_posts)
+
 # end login code
 @app.route("/likes/<int:picture_id>", methods=['GET'])
 def like(picture_id):
