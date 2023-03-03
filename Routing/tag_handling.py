@@ -5,7 +5,6 @@ from flask_login import current_user
 import os
 import base64
 import app as main
-
 tag_handling = Blueprint('tag_handling', __name__, template_folder='templates')
 # Displays all photos from tag search  
 def search_tag():

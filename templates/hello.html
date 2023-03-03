@@ -1,25 +1,25 @@
 <!-- authors Brenton Babb and Raymond Chu (babbb@bu.edu, raychu@bu.edu)-->
 <!doctype html>
 {% if message %}
-  <h4>{{message}}!</h4>
+<h4>{{message}}!</h4>
 {% endif %}
 <title>Photoshare</title>
 {% if name %}
-  <h1>Hello {{ name }}!</h1>
+<h1>Hello {{ name }}!</h1>
 {% endif %}
 
 {% if albums %}
 <h2>Albums:</h2>
-    <ul>
-    {% for albums in albums %}
-          <a href="/profile/{{user_id}}/{{albums[1]}}" class="button" name="album_link">{{albums[0]}}</a>
-        {%if current_user == albums[2] %}
-          -
-            <a href="/album/{{albums[1]}}/delete" class="button" name="delete">Delete album: {{albums[0]}}</a>
-        {%endif%}
-        <br>
-    {% endfor %}
-    </ul>
+<ul>
+  {% for albums in albums %}
+  <a href="/profile/{{user_id}}/{{albums[1]}}" class="button" name="album_link">{{albums[0]}}</a>
+  {%if current_user == albums[2] %}
+  -
+  <a href="/album/{{albums[1]}}/delete" class="button" name="delete">Delete album: {{albums[0]}}</a>
+  {%endif%}
+  <br>
+  {% endfor %}
+</ul>
 {% endif %}
 
 
@@ -67,17 +67,17 @@
 
 
 {% if message is none %}
-  <p>You should <a href='/login'>login!</a></p>
+<p>You should <a href='/login'>login!</a></p>
 {% else %}
-  <p> Go to <a href='/profile'>profile?</a></p>
+<p> Go to <a href='/profile'>profile?</a></p>
 {% endif %}
 
 <ul>
-<li><a href='/upload'>Upload a photo</a> </li>
-<li><a href='/album_creation'>Create a new album</a> </li>
-<li><a href='/global'>Global Feed</a> </li>
-<li><a href='/personal-feed'>Personal feed</a></li>
-<li><a href='/logout'>Logout</a></li>
-<li><a href='/'>Home</a></li>
-<li><a href='/friends'>Friends</a></li>
+  <li><a href='/upload'>Upload a photo</a> </li>
+  <li><a href='/album_creation'>Create a new album</a> </li>
+  <li><a href='/global'>Global Feed</a> </li>
+  <li><a href='/personal-feed'>Personal feed</a></li>
+  <li><a href='/logout'>Logout</a></li>
+  <li><a href='/'>Home</a></li>
+  <li><a href='/friends'>Friends</a></li>
 </ul>
