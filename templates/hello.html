@@ -8,6 +8,22 @@
 <h1>Hello {{ name }}!</h1>
 {% endif %}
 
+<ul>
+  <li><a href='/'>Home</a></li>
+  <li><a href='/upload'>Upload a photo</a> </li>
+  <li><a href='/album_creation'>Create a new album</a> </li>
+  <li><a href='/global'>Global Feed</a> </li>
+  <li><a href='/personal-feed'>Personal feed</a></li>
+  <li><a href='/friends'>Friends</a></li>
+  {% if message is none %}
+    <li>You should <a href='/login'>login!</a></li>
+    {% else %}
+    <li><a href='/profile'>Profile</a></li>
+  {% endif %}
+
+  <li><a href='/logout'>Logout</a></li>
+</ul>
+
 {% if albums %}
 <h2>Albums:</h2>
 <ul>
@@ -60,18 +76,3 @@
 
 
 
-{% if message is none %}
-<p>You should <a href='/login'>login!</a></p>
-{% else %}
-<p> Go to <a href='/profile'>profile?</a></p>
-{% endif %}
-
-<ul>
-  <li><a href='/upload'>Upload a photo</a> </li>
-  <li><a href='/album_creation'>Create a new album</a> </li>
-  <li><a href='/global'>Global Feed</a> </li>
-  <li><a href='/personal-feed'>Personal feed</a></li>
-  <li><a href='/logout'>Logout</a></li>
-  <li><a href='/'>Home</a></li>
-  <li><a href='/friends'>Friends</a></li>
-</ul>
