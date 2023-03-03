@@ -40,17 +40,17 @@
           {%else%}
             <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
             <a href="/profile/{{photo[3]}}" class="button" name="poster">Profile</a>
+            <a href="/tags/{{photo[1]}}" class="button" name="tags">Tags</a>
           {% endif %}
           Likes: {{photo[4]}}
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
-        <form method="post" action="{{ url_for('add_tag') }}">
+        <form method="POST" action="{{ url_for('add_tag') }}">
           <input type="hidden" name="picture_id" value="{{ picture_id }}">
-          <label for="tag_name">Tag Name:</label>
-          <input type="text" name="tag_name" id="tag_name" required>
-          <button type="submit">Add Tag</button>
+          <label for="tag_name">Tag:</label>
+          <input type="text" name="tag_name" required>
+          <button type="submit">Add tag</button>
         </form>
-          <p> Tags:</p>
     <!-- search_results.html -->
 {% for result in results %}
 <div>

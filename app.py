@@ -23,7 +23,7 @@ from Routing.comment_handling import comment_handling
 from Routing.album_viewing import album_viewing
 from Routing.friends_handling import friends_handling
 from Routing.deletion_handling import deletion_handling
-
+from Routing.tag_handling import tag_handling
 # for image uploading
 import os
 import base64
@@ -39,10 +39,11 @@ app.register_blueprint(comment_handling)
 app.register_blueprint(album_viewing)
 app.register_blueprint(friends_handling)
 app.register_blueprint(deletion_handling)
+app.register_blueprint(tag_handling)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -295,58 +296,9 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
 
-@app.route("/search_tag", methods=['POST'])
-def search_tag():
-    if request.method == 'POST':
-        tag = request.form['tag']
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT p.imgdata, p.caption FROM Pictures p JOIN Tagged t ON p.picture_id = t.picture_id JOIN Tags tg ON t.tag_id = tg.tag_id WHERE tg.tag_name = %s",
-            (tag,)
-        )
-        results = cursor.fetchall()
-        return render_template('hello.html', results=results)
-    else:
-        return render_template('hello.html')
-                           
-@app.route("/display_tag", methods=['GET'])
-def display_tag(picture_id):
-    cursor = conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
-    tags = cursor.fetchall()
-    return render_template('hello.html', tags=tags, picture_id = picture_id)
-    
-
-@app.route('/add_tag', methods=['GET', 'POST'])
-def add_tag():
-    if request.method == 'POST':
-        # Retrieve form data
-        picture_id = request.form['picture_id']
-        tag_name = request.form['tag_name']
-        
-        # Check if tag already exists
-        cursor = conn.cursor()
-        cursor.execute("SELECT tag_id FROM Tags WHERE tag_name = %s", (tag_name,))
-        result = cursor.fetchone()
-        
-        if result is None:
-            # Tag does not exist, so add it to Tags table
-            cursor.execute("INSERT INTO Tags (tag_name) VALUES (%s)", (tag_name,))
-            tag_id = cursor.lastrowid
-        else:
-            # Tag already exists, so retrieve its tag_id
-            tag_id = result[0]
-            
-        # Add the tag to the Tagged table
-        cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id))
-        conn.commit()
-        
-        # Redirect to photo page
-        return redirect(url_for('view_photo', picture_id=picture_id))
-    else:
-        # Display add tag form
-        picture_id = request.args.get('picture_id')
-        return render_template('hello.html', picture_id=picture_id)
+@app.route("/tags/<int:picture_id>", methods=['GET']) 
+def tag(picture_id):
+    userid =  getUserIdFromEmail(flask_login.current_user.id) 
 
 
 @app.route('/profile')
