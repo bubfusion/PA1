@@ -26,11 +26,6 @@
 {% if photos %}
 <h3>Popular tags:</h3>
 <ul>
-  {% for tag in popular_tags %}
-    <li>{{ tag[0] }} ({{ tag[1] }} photos)</li>
-  {% endfor %}
-</ul>
-<ul>
   <form action="{{ url_for('search_tag') }}" method="post">
     <label for="tag">Search photo by tag:</label>
     <input type="text" id="tag" name="tag">
@@ -45,6 +40,7 @@
           {%else%}
             <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
             <a href="/profile/{{photo[3]}}" class="button" name="poster">Profile</a>
+            <a href="/tags/{{photo[1]}}" class="button" name="tags">Tags</a>
           {% endif %}
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
@@ -54,21 +50,6 @@
           <input type="text" name="tag_name" required>
           <button type="submit">Add tag</button>
         </form>
-          <p> Tags:</p>
-          <form method="post" action="{{ url_for('add_tag') }}">
-            <button type="submit">View all</button>
-            {% for tag in display_all %}
-              <p>Tag ID: {{ tag[0] }}</p>
-              <p>Picture ID: {{ tag[1] }}</p>
-            {% endfor %}
-          </form>
-          <form method="post" action="{{ url_for('add_tag') }}">
-            <button type="submit">View my photos</button>
-            {% for tag in display_user %}
-              <p>Tag ID: {{ tag[0] }}</p>
-              <p>Picture ID: {{ tag[1] }}</p>
-            {% endfor %}
-          </form>
     <!-- search_results.html -->
 {% for result in results %}
 <div>

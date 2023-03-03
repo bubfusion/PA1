@@ -11,7 +11,6 @@
 
 import datetime
 import flask
-import psycopg2
 from flask import Flask, Response, request, render_template, redirect, url_for, Blueprint
 from flaskext.mysql import MySQL
 import flask_login
@@ -24,7 +23,7 @@ from Routing.comment_handling import comment_handling
 from Routing.album_viewing import album_viewing
 from Routing.friends_handling import friends_handling
 from Routing.deletion_handling import deletion_handling
-
+from Routing.tag_handling import tag_handling
 # for image uploading
 import os
 import base64
@@ -40,6 +39,7 @@ app.register_blueprint(comment_handling)
 app.register_blueprint(album_viewing)
 app.register_blueprint(friends_handling)
 app.register_blueprint(deletion_handling)
+app.register_blueprint(tag_handling)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
@@ -287,69 +287,9 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
 
-# Displays all photos from tag search  
-@app.route("/search_tag", methods=['POST'])
-def search_tag():
-    if request.method == 'POST':
-        tag = request.form['tag']
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT p.imgdata, p.caption FROM Pictures p JOIN Tagged t ON p.picture_id = t.picture_id JOIN Tags tg ON t.tag_id = tg.tag_id WHERE tg.tag_name = %s",
-            (tag,)
-        )
-        results = cursor.fetchall()
-        return render_template('hello.html', results=results)
-    else:
-        return render_template('hello.html')
-
-# Displays all photos from tag                        
-@app.route("/display_all/<int:picture_id>", methods=['GET'])
-def display_tag(picture_id):
-    cursor = conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
-    tags = cursor.fetchall()
-    return render_template('hello.html', display_all=tags, picture_id = picture_id)
-
-# Displays all user photos from tag  
-@app.route("/display_user/<int:picture_id>", methods=['GET'])
-def display_usertag(picture_id):
-    cursor = conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged JOIN Pictures ON Pictures.picture_id = Tagged.picture_id WHERE Pictures.user_id = %s AND Tagged.picture_id = %s", (flask_login.current_user.id, picture_id))
-    tags = cursor.fetchall()
-    return render_template('hello.html', display_user=tags, picture_id=picture_id) 
-
-# Adds tag to db
-@app.route("/add_tag", methods=['POST'])
-def add_tag():
-    tag_name = request.form['tag_name']
-    picture_id = request.form['picture_id']
-
-    # Insert tag into Tags table
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO Tags (name) VALUES (%s)", (tag_name,))
-    tag_id = cursor.fetchall()
-
-    # Associate tag with picture in Tagged table
-    cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id))
-    conn.commit()
-
-    return render_template('hello.html')
-                           
-@app.route('/popular_tags')
-def popular_tags():
-    conn = psycopg2.connect(database="photoshare", user="username", password="password", host="localhost", port="5432")
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT Tags.name, COUNT(*) as tag_count FROM Tagged INNER JOIN Tags ON Tagged.tag_id = Tags.tag_id GROUP BY Tags.name ORDER BY tag_count DESC LIMIT 3;
-    """)
-
-    popular_tags = cur.fetchall()
-
-    cur.close()
-    conn.close()
-    return render_template('hello.html', popular_tags=popular_tags)
-
+@app.route("/tags/<int:picture_id>", methods=['GET']) 
+def tag(picture_id):
+    userid =  getUserIdFromEmail(flask_login.current_user.id) 
 
 
 @app.route('/profile')
