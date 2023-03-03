@@ -15,5 +15,9 @@ def feed():
     current_user = main.getUserIdFromEmail(flask_login.current_user.id)
     cursor = main.conn.cursor()
     cursor.execute("SELECT imgdata, picture_id, caption, user_id FROM Pictures")
-    photos = cursor.fetchall()
+    photos = list(cursor.fetchall())
+
+    for i in range(0,len(photos)):
+        photos[i] = photos[i] + (main.getNumLike(photos[i][1]),)
+    print(photos)
     return render_template('hello.html', message='Global feed', photos=photos, base64=base64, current_user = current_user)

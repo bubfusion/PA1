@@ -52,14 +52,11 @@ def add_tag():
     return render_template('tags.html')
                            
 def popular_tags():
-    cur = conn.cursor()
+    cur = main.conn.cursor()
 
     cur.execute("""
         SELECT Tags.name, COUNT(*) as tag_count FROM Tagged INNER JOIN Tags ON Tagged.tag_id = Tags.tag_id GROUP BY Tags.name ORDER BY tag_count DESC LIMIT 3;
     """)
 
     popular_tags = cur.fetchall()
-
-    cur.close()
-    conn.close()
     return render_template('tags.html', popular_tags=popular_tags)
