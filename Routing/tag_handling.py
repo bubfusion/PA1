@@ -20,20 +20,27 @@ def search_tag():
     else:
         return render_template('tags.html')
 
-# Displays all photos from tag                        
-def display_tag(picture_id):
+# Displays all photos from tag           
+def display_allphotos(picture_id):
     cursor = main.conn.cursor()
     cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
     tags = cursor.fetchall()
-    return render_template('tags.html', display_all=tags, picture_id = picture_id)
+    return render_template('tags.html', display_allphotos=tags, picture_id = picture_id)
 
 # Displays all user photos from tag  
-def display_usertag(picture_id):
+def display_userphotos(picture_id):
     cursor = main.conn.cursor()
     cursor.execute("SELECT tag_id, picture_id FROM Tagged JOIN Pictures ON Pictures.picture_id = Tagged.picture_id WHERE Pictures.user_id = %s AND Tagged.picture_id = %s", (flask_login.current_user.id, picture_id))
     tags = cursor.fetchall()
-    return render_template('tags.html', display_user=tags, picture_id=picture_id) 
+    return render_template('tags.html', display_userphotos=tags, picture_id=picture_id) 
 
+
+@tag_handling.route('/tags/<int:picture_id>', methods=['GET'])
+def display_tags(picture_id):
+    cursor = main.conn.cursor()
+    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {1}".format(picture_id))
+    tags = cursor.fetchall()
+    return render_template('tags.html', display_tags = tags, picture_id = picture_id)
 # Adds tag to db
 def add_tag():
     tag_name = request.form['tag_name']
