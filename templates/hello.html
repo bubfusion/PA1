@@ -26,11 +26,6 @@
 {% if photos %}
 <h3>Popular tags:</h3>
 <ul>
-  <form action="{{ url_for('search_tag') }}" method="post">
-    <label for="tag">Search photo by tag:</label>
-    <input type="text" id="tag" name="tag">
-    <button type="submit">Search</button>
-  </form>
 <h2>Photos:</h2>
     {% for photo in photos %}
         <li>{{photo[2]}} 
@@ -45,12 +40,6 @@
           Likes: {{photo[4]}}
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
-        <form method="POST" action="{{ url_for('add_tag') }}">
-          <input type="hidden" name="picture_id" value="{{ picture_id }}">
-          <label for="tag_name">Tag:</label>
-          <input type="text" name="tag_name" required>
-          <button type="submit">Add tag</button>
-        </form>
     <!-- search_results.html -->
 {% for result in results %}
 <div>
