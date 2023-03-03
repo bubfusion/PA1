@@ -58,7 +58,6 @@ cursor.execute("SELECT email from Users")
 users = cursor.fetchall()
 
 
-
 def getUserList():
     cursor = conn.cursor()
     cursor.execute("SELECT email from Users")
@@ -197,10 +196,14 @@ def getLikes(uid):
 
 def getUsersPhotos(uid):
     cursor = conn.cursor()
+    
     cursor.execute(
         "SELECT imgdata, picture_id, caption, user_id FROM Pictures WHERE user_id = '{0}'".format(uid))
     # NOTE return a list of tuples, [(imgdata, pid, caption, user_id), ...]
-    return cursor.fetchall()
+    photo_list = list(cursor.fetchall())
+    photo_list[0] = photo_list[0] + (getNumLike(photo_list[0][1]),)
+    print(photo_list)
+    return photo_list
 
 def getTags(uid):
     cursor = conn.cursor()
@@ -273,6 +276,12 @@ def isEmailUnique(email):
         return False
     else:
         return True
+    
+def getNumLike(picture_id):
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(user_id) FROM Likes WHERE picture_id = {0}".format(picture_id))
+    return(cursor.fetchone()[0])
+
 # end login code
 @app.route("/likes/<int:picture_id>", methods=['GET'])
 def like(picture_id):

@@ -1,3 +1,5 @@
+DROP DATABASE photoshare;
+
 CREATE DATABASE IF NOT EXISTS photoshare;
 USE photoshare;
 DROP TABLE IF EXISTS Pictures CASCADE;
@@ -65,7 +67,7 @@ CREATE TABLE Friends(
 
 CREATE TABLE Likes(
     picture_id int4,
-    User_id int4,
+    user_id int4,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE,
     PRIMARY KEY(user_id, picture_id)

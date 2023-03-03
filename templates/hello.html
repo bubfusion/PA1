@@ -41,6 +41,7 @@
             <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
             <a href="/profile/{{photo[3]}}" class="button" name="poster">Profile</a>
           {% endif %}
+          Likes: {{photo[4]}}
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
         <form method="post" action="{{ url_for('add_tag') }}">
