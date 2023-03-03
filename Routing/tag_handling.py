@@ -35,6 +35,7 @@ def display_usertag(picture_id):
     return render_template('tags.html', display_user=tags, picture_id=picture_id) 
 
 # Adds tag to db
+@tag_handling.route('/tags/<int:picture_id>', methods=['GET'])
 def add_tag():
     tag_name = request.form['tag_name']
     picture_id = request.form['picture_id']
