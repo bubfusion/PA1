@@ -18,6 +18,7 @@ from Routing.album_viewing import album_viewing
 from Routing.friends_handling import friends_handling
 from Routing.deletion_handling import deletion_handling
 from Routing.tag_handling import tag_handling
+from Routing.leader_board import leader_board
 # for image uploading
 import os
 import base64
@@ -34,6 +35,7 @@ app.register_blueprint(album_viewing)
 app.register_blueprint(friends_handling)
 app.register_blueprint(deletion_handling)
 app.register_blueprint(tag_handling)
+app.register_blueprint(leader_board)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'

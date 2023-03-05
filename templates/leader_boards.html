@@ -1,0 +1,18 @@
+<!-- authors Brenton Babbn(babbb@bu.edu)-->
+<!doctype html>
+
+<h2>Photo Share Top Contributors</h2>
+
+
+{% if leader_list %}
+    <ul>
+    {% for leader_list in leader_list %}
+            <a href="/profile/{{leader_list[0]}}" class="button" name="commenter_link">User: {{leader_list[2]}}</a>
+            Constribution Score: {{leader_list[1]}}<br>
+            <br>
+    {% endfor %}
+    </ul>
+{% endif %}
+
+
+<a href='/'>Home</a>
