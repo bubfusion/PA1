@@ -202,11 +202,17 @@ def getUsersPhotos(uid):
             photo_list[0] = photo_list[0] + (getNumLike(photo_list[0][1]),)
     return photo_list
 
-def getTags(uid):
+""" def getTagsFromPictureID(picture_id):
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT Tags.tag_name FROM Tags JOIN Tagged ON Tagged.tag_id = Tags.tag_id WHERE Tagged.user_id = '{0}'".format(uid))
-    return [row[0] for row in cursor.fetchall()]
+        "SELECT Tags.tag_name FROM Tags JOIN Tagged ON Tagged.tag_id = Tags.tag_id WHERE Tagged.picture_id = '{0}'".format(picture_id))
+    return [row[0] for row in cursor.fetchall()] """
+
+def getTagsFromPictureID(picture_id):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT name FROM Tags WHERE picture_id = '{0}'".format(picture_id))
+    return cursor.fetchone()[0]
 
 def getFeedPhotos(uid):
     cursor = conn.cursor()
@@ -301,26 +307,6 @@ def like(picture_id):
         print(cursor.execute('''DELETE FROM Likes WHERE user_id = {0} AND picture_id = {1}'''.format(userid, picture_id)))
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
-
-@app.route("/tags", methods=['GET']) 
-def tag():
-    return render_template('tags.html')
-
-# Adds tag to db
-@app.route("/add_tag/<int:picture_id>", methods=['POST']) 
-def add_tag(picture_id):
-    tag_name = request.form["tag_name"]
-    # Insert tag into Tags table
-    cursor = conn.cursor()
-    print(cursor.execute("INSERT INTO Tags (name) VALUES (%s)", (tag_name)))
-    tag_id = cursor.fetchall()
-
-    # Associate tag with picture in Tagged table
-    print(cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id)))
-    conn.commit()
-
-    return render_template('tags.html')
-
 
 @app.route('/profile')
 @flask_login.login_required

@@ -1,0 +1,22 @@
+<head>
+    {% if msg %}
+    <h4>{{msg}}!</h4>
+    {% endif %}
+    <title>Tag Search</title>
+</head>
+
+<body>
+    <button type="submit">View all</button>
+    {% for tag in display_all %}
+    <p>Tag ID: {{ tag[0] }}</p>
+    <p>Picture ID: {{ tag[1] }}</p>
+    {% endfor %}
+
+    <button type="submit">View my photos</button>
+    {% for tag in display_user %}
+    <p>Tag ID: {{ tag[0] }}</p>
+    <p>Picture ID: {{ tag[1] }}</p>
+    {% endfor %}
+    <a href='/'>Home</a>
+
+    <body>

@@ -10,68 +10,58 @@ import app as main
 tag_handling = Blueprint('tag_handling', __name__, template_folder='templates')
 
 @tag_handling.route("/tags", methods=['GET']) 
-def tag():
-    return render_template('tags.html')
+def tags():
+   """  tags = get_popular_tags()
+    return render_template('tags.html',popular_tags=tags, base64=base64) """
+   return render_template('tags.html')
+
+def get_popular_tags():
+    cursor = main.conn.cursor()
+    print(cursor.execute('SELECT Tags.name, COUNT(*) as count FROM Tags JOIN Tagged ON Tags.tag_id = Tagged.tag_id GROUP BY Tags.tag_id ORDER BY count DESC LIMIT 3'))
+    tags = cursor.fetchall()
+    main.conn.close()
+    return render_template('tags.html',popular_tags=tags, base64=base64)
 
 # Adds tag to db
 @tag_handling.route("/add_tag/<int:picture_id>", methods=['POST']) 
 def add_tag(picture_id):
     tag_name = request.form["tag_name"]
+    uid = flask_login.current_user.id
     # Insert tag into Tags table
     cursor = main.conn.cursor()
-    print(cursor.execute("INSERT INTO Tags (name) VALUES (%s)", (tag_name)))
-    tag_id = cursor.fetchall()
+    print(cursor.execute("INSERT INTO Tags (tag_id, picture_id, name) VALUES (%s, %s)", (uid, picture_id, tag_name)))
+    """ tag_id = cursor.fetchall()
 
     # Associate tag with picture in Tagged table
-    print(cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id)))
+    print(cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id))) """
     main.conn.commit()
+    tags = display_tags(picture_id)
+    return render_template('hello.html', display_tags = tags, message='Tag added!', base64=base64)
 
-    return render_template('tags.html')
-
-# Displays all photos from tag search  
-@tag_handling.route('/search_tag/', methods=['POST'])
-def search_tag():
-    if request.method == 'POST':
-        tag = request.form['tag']
-        cursor = main.conn.cursor()
-        cursor.execute(
-            "SELECT p.imgdata, p.caption FROM Pictures p JOIN Tagged t ON p.picture_id = t.picture_id JOIN Tags tg ON t.tag_id = tg.tag_id WHERE tg.tag_name = %s",
-            (tag,)
-        )
-        results = cursor.fetchall()
-        return render_template('tags.html', results=results)
-    else:
-        return render_template('tags.html')
-
-# Displays all photos from tag           
-def display_allphotos(picture_id):
+# Displays all photos from tag          
+tag_handling.route('tag_search', methods=['POST']) 
+def display_allphotos():
+    name = str(request.form.get("tag"))
     cursor = main.conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {0}".format(picture_id))
-    tags = cursor.fetchall()
-    return render_template('tags.html', display_allphotos=tags, picture_id = picture_id)
+    cursor.execute("SELECT picture_id FROM Tags WHERE name  = %s", (name))
+    pictures = cursor.fetchall()
+    return render_template('tag_search.html', display_all=pictures)
 
 # Displays all user photos from tag  
-def display_userphotos(picture_id):
+tag_handling.route('tag_search', methods=['POST'])
+def display_userphotos():
+    uid = flask_login.current_user.id
+    name = str(request.form.get("tag"))
     cursor = main.conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged JOIN Pictures ON Pictures.picture_id = Tagged.picture_id WHERE Pictures.user_id = %s AND Tagged.picture_id = %s", (flask_login.current_user.id, picture_id))
-    tags = cursor.fetchall()
-    return render_template('tags.html', display_userphotos=tags, picture_id=picture_id) 
+    cursor.execute("SELECT picture_id FROM Tags WHERE tag_id = %s AND name  = %s", (uid, name))
+    pictures = cursor.fetchall()
+    return render_template('tag_search.html', display_user=pictures) 
 
-#display tags already added to db for given picture
-@tag_handling.route('/tags/<int:picture_id>', methods=['GET'])
+#display tags to profile pictures
 def display_tags(picture_id):
-    cursor = main.conn.cursor()
-    cursor.execute("SELECT tag_id, picture_id FROM Tagged WHERE picture_id = {0}".format(picture_id))
-    tags = cursor.fetchall()
-    return render_template('tags.html', display_tags = tags, picture_id = picture_id)
+    tagNames = []
+    tags = main.getTagsFromPictureID(picture_id)
+    for i in tags:
+        tagNames.append(i)
+    return tagNames
 
-                           
-def popular_tags():
-    cur = main.conn.cursor()
-
-    cur.execute("""
-        SELECT Tags.name, COUNT(*) as tag_count FROM Tagged INNER JOIN Tags ON Tagged.tag_id = Tags.tag_id GROUP BY Tags.name ORDER BY tag_count DESC LIMIT 3;
-    """)
-
-    popular_tags = cur.fetchall()
-    return render_template('tags.html', popular_tags=popular_tags)
