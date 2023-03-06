@@ -20,7 +20,10 @@ def comments(picture_id, msg = None):
 @comment_handling.route('/comments/<int:picture_id>', methods=['POST'])
 def user_commented(picture_id):
     cursor = main.conn.cursor()
-    uid = main.getUserIdFromEmail(flask_login.current_user.id)
+    try:
+        uid = main.getUserIdFromEmail(flask_login.current_user.id)
+    except:
+        uid = -1
     date = datetime.date.today()
     text = request.form.get("comment")
     try:

@@ -336,6 +336,9 @@ def user_profile(user_id):
      else:
          return render_template('hello.html', message="Sorry! That user does not exist")
 
+@app.route('/profile/-1')
+def anon_profile():
+    return render_template('hello.html', message="Guests can comment as an anonymous user. There is no profile for this user")
 
 # begin photo uploading code
 # photos uploaded using base64 encoding so they can be directly embeded in HTML
