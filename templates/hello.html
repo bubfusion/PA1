@@ -20,6 +20,7 @@
   <li><a href='/friends'>Friends</a></li>
   <li><a href='/comment_search'>Search for a comment</a></li>
   <li><a href='/leader_board'>Global Contribution Score Leaderboard</a></li>
+  <li><a href="/tags">Tags</a></li>
   {% if message is none %}
     <li>You should <a href='/login'>login!</a></li>
     {% else %}
@@ -50,7 +51,12 @@
     {% for photo in photos %}
         <li>{{photo[2]}} 
           <a href="/likes/{{photo[1]}}" class="button" name="like">Like</a>
-          <a href="/tags/{{photo[1]}}" class="button" name="tags">Tags</a>
+          <form method="POST" action="/add_tag/{{photo[1]}}">
+            <input type="hidden" name="picture_id" value="{{ picture_id }}">
+            <label for="tag_name">Tag:</label>
+            <input type="text" name="tag_name" required>
+            <button type="submit">Add tag</button>
+          </form>
           {%if current_user == photo[3] %}
             <a href="/{{photo[1]}}/delete" class="button" name="delete">Delete</a>
           {%else%}
@@ -60,12 +66,7 @@
           Likes: {{photo[4]}}
           <br>
         <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}'/></li>
-        <form method="POST" action="{{ url_for('add_tag') }}">
-          <input type="hidden" name="picture_id" value="{{ picture_id }}">
-          <label for="tag_name">Tag:</label>
-          <input type="text" name="tag_name" required>
-          <button type="submit">Add tag</button>
-        </form>
+        
     <!-- search_results.html -->
 {% for result in results %}
 <div>

@@ -1,3 +1,5 @@
+
+import flask
 from flask import Flask, Response, request, render_template, redirect, url_for, Blueprint
 from flaskext.mysql import MySQL
 import flask_login
@@ -6,8 +8,28 @@ import os
 import base64
 import app as main
 tag_handling = Blueprint('tag_handling', __name__, template_folder='templates')
+
+@tag_handling.route("/tags", methods=['GET']) 
+def tag():
+    return render_template('tags.html')
+
+# Adds tag to db
+@tag_handling.route("/add_tag/<int:picture_id>", methods=['POST']) 
+def add_tag(picture_id):
+    tag_name = request.form["tag_name"]
+    # Insert tag into Tags table
+    cursor = main.conn.cursor()
+    print(cursor.execute("INSERT INTO Tags (name) VALUES (%s)", (tag_name)))
+    tag_id = cursor.fetchall()
+
+    # Associate tag with picture in Tagged table
+    print(cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id)))
+    main.conn.commit()
+
+    return render_template('tags.html')
+
 # Displays all photos from tag search  
-@tag_handling.route('/tag_handling.search_tag/', methods=['POST'])
+@tag_handling.route('/search_tag/', methods=['POST'])
 def search_tag():
     if request.method == 'POST':
         tag = request.form['tag']
