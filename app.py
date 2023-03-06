@@ -39,7 +39,7 @@ app.register_blueprint(leader_board)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -302,23 +302,21 @@ def like(picture_id):
         conn.commit()
         return render_template('hello.html', name=flask_login.current_user.id, message='Unliked image!', photos=getUsersPhotos(userid), base64=base64)
 
-@app.route("/tags/<int:picture_id>", methods=['GET']) 
-def tag(picture_id):
-    userid =  getUserIdFromEmail(flask_login.current_user.id) 
+@app.route("/tags", methods=['GET']) 
+def tag():
+    return render_template('tags.html')
 
 # Adds tag to db
-@app.route("/add_tag>", methods=['POST']) 
-def add_tag():
-    tag_name = request.form['tag_name']
-    picture_id = request.form['picture_id']
-
+@app.route("/add_tag/<int:picture_id>", methods=['POST']) 
+def add_tag(picture_id):
+    tag_name = request.form["tag_name"]
     # Insert tag into Tags table
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Tags (name) VALUES (%s)", (tag_name,))
+    print(cursor.execute("INSERT INTO Tags (name) VALUES (%s)", (tag_name)))
     tag_id = cursor.fetchall()
 
     # Associate tag with picture in Tagged table
-    cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id))
+    print(cursor.execute("INSERT INTO Tagged (picture_id, tag_id) VALUES (%s, %s)", (picture_id, tag_id)))
     conn.commit()
 
     return render_template('tags.html')

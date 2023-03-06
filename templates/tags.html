@@ -1,24 +1,22 @@
-
-<h3>Popular tags:</h3>
+<h3>Tags!</h3>
 <ul>
   {% for tag in popular_tags %}
-    <li>{{ tag[0] }} ({{ tag[1] }} photos)</li>
+  <li>{{ tag[0] }} ({{ tag[1] }} photos)</li>
   {% endfor %}
 </ul>
 <form action="{{ url_for('tag_handling.search_tag') }}" method="post">
-    <label for="tag">Search photo by tag:</label>
-    <input type="text" id="tag" name="tag">
-    <button type="submit">Search</button>
-  </form>
+  <label for="tag">Search photo by tag:</label>
+  <input type="text" id="tag" name="tag">
+  <button type="submit">Search</button>
+</form>
 <button type="submit">View all</button>
 {% for tag in display_all %}
 <p>Tag ID: {{ tag[0] }}</p>
 <p>Picture ID: {{ tag[1] }}</p>
 {% endfor %}
-</form>
-<form method="post" action="{{ url_for('add_tag') }}">
-    <button type="submit">View my photos</button>
-    {% for tag in display_user %}
-    <p>Tag ID: {{ tag[0] }}</p>
-    <p>Picture ID: {{ tag[1] }}</p>
-    {% endfor %}
+
+<button type="submit">View my photos</button>
+{% for tag in display_user %}
+<p>Tag ID: {{ tag[0] }}</p>
+<p>Picture ID: {{ tag[1] }}</p>
+{% endfor %}
