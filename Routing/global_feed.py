@@ -13,7 +13,10 @@ global_feed = Blueprint('global_feed', __name__, template_folder='templates')
 
 @global_feed.route('/global', methods=['GET'])
 def feed():
-    current_user = main.getUserIdFromEmail(flask_login.current_user.id)
+    try:
+        current_user = main.getUserIdFromEmail(flask_login.current_user.id)
+    except:
+        current_user = None
     cursor = main.conn.cursor()
     cursor.execute("SELECT imgdata, picture_id, caption, user_id FROM Pictures")
     photos = list(cursor.fetchall())
