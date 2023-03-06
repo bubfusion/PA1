@@ -19,6 +19,7 @@ from Routing.friends_handling import friends_handling
 from Routing.deletion_handling import deletion_handling
 from Routing.tag_handling import tag_handling
 from Routing.leader_board import leader_board
+from Routing.recommended_photos import recommended_photos
 # for image uploading
 import os
 import base64
@@ -36,10 +37,11 @@ app.register_blueprint(friends_handling)
 app.register_blueprint(deletion_handling)
 app.register_blueprint(tag_handling)
 app.register_blueprint(leader_board)
+app.register_blueprint(recommended_photos)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)

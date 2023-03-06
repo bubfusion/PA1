@@ -21,6 +21,8 @@ def friendTuple(uid):
 
 def friendRecs(uid):
     friends = friendTuple(uid)
+    #adds current user to friends list so the user isn't recommended to themself
+    friends.append((main.getFirstNameFromId(uid), main.getEmailFromId(uid), uid))
     friendsOfFriends = set()
     for i in range(len(friends)):
         friendsOfCurrentUser = friendTuple(friends[i][2])
@@ -28,8 +30,7 @@ def friendRecs(uid):
             friendsOfFriends.add(friendsOfCurrentUser[x])
     friends = set(friends)
     final = friendsOfFriends.difference(friends)
-    print(final)
-    return final
+    return list(final)
 
 @friends_handling.route("/friends", methods=['GET'])
 @flask_login.login_required
