@@ -100,7 +100,7 @@ BEGIN
 END$$
 DELIMITER ;
 
-INSERT INTO Users (email, password, dob, first_name) VALUES ('admin', 'password', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Anonymous User');
+INSERT INTO Users (user_id, email, password, dob, first_name) VALUES (-1, 'admin', 'password', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Anonymous User');
 
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
 INSERT INTO Users (email, password, dob, first_name) VALUES ('test2@bu.edu', 'test', STR_TO_DATE('12-04-2002','%m-%d-%Y'), 'Brenton');
