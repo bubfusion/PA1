@@ -18,6 +18,7 @@
   <li><a href='/global'>Global Feed</a> </li>
   <li><a href='/personal-feed'>Personal feed</a></li>
   <li><a href='/friends'>Friends</a></li>
+  <li><a href='/recommended_photos'>Recommended Photos</a></li>
   <li><a href='/comment_search'>Search for a comment</a></li>
   <li><a href='/leader_board'>Global Contribution Score Leaderboard</a></li>
   <li><a href="/tags">Search tags</a></li>
@@ -58,20 +59,8 @@
   <h2>Photos:</h2>
   {% for photo in photos %}
   <li>
-    {{photo[2]}}
+    Caption:{{photo[2]}} <br>
     <a href="/likes/{{photo[1]}}" class="button" name="like">Like</a>
-    <form method="POST" action="/add_tag/{{photo[1]}}">
-      <input type="hidden" name="picture_id" value="{{ picture_id }}">
-      <label for="tag_name">Tag:</label>
-      <input type="text" name="tag_name" required>
-      <button type="submit">Add tag</button>
-    </form>
-    <!--- Display tag hyperlinks-->
-    <a href="/display_tags/{{photo[1]}}" class="button" name="display_tags" >View tags</a>
-    {% for tag in display_tags %}
-    <li><a href="/likes/{{photo[1]}}">{{ tag }}</a></li>
-    {% endfor %}
-
   {%if current_user == photo[3] %}
   <a href="/{{photo[1]}}/delete" class="button" name="delete">Delete</a>
   {%else%}
@@ -79,6 +68,17 @@
   <a href="/profile/{{photo[3]}}" class="button" name="poster">Profile</a>
   {% endif %}
   Likes: {{photo[4]}}
+  <form method="POST" action="/add_tag/{{photo[1]}}">
+    <input type="hidden" name="picture_id" value="{{ picture_id }}">
+    <label for="tag_name">Tag:</label>
+    <input type="text" name="tag_name" required>
+    <button type="submit">Add tag</button>
+  </form>
+  <!--- Display tag hyperlinks-->
+  <a href="/display_tags/{{photo[1]}}" class="button" name="display_tags" >View tags</a>
+  {% for tag in display_tags %}
+  <li><a href="/likes/{{photo[1]}}">{{ tag }}</a></li>
+  {% endfor %}
   <br>
   <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}' />
   </li>

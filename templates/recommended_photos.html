@@ -1,0 +1,14 @@
+<h2>Recommended Photos:</h2>
+{% if photos%}
+    {% for photo in photos %}
+    <li>
+      Caption: {{photo[2]}} <br>
+    <a href="/likes/{{photo[1]}}" class="button" name="like">Like</a>
+    <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
+    <a href="/profile/{{photo[3]}}" class="button" name="poster">Profile</a>
+    Likes: {{photo[4]}}
+    <br>
+    <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}' />
+  {% endfor %}
+</ul>
+{% endif %}
