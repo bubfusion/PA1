@@ -33,7 +33,7 @@ def tag_search():
 def display_allphotos():
     name = str(request.form.get("searched_tag"))
     cursor = main.conn.cursor()
-    cursor.execute("SELECT picture_id FROM Tags WHERE name  = %s", (name))
+    cursor.execute("SELECT Tags.name, Pictures.imgdata, Tags.picture_id FROM Tags INNER JOIN Pictures ON Tags.picture_id = Pictures.picture_id WHERE name  = %s", (name))
     pictures = cursor.fetchall()
     return render_template('tag_search.html', display_all=main.getUserPhotosFromPictureID(pictures))
 
@@ -43,7 +43,7 @@ def display_userphotos():
     uid = flask_login.current_user.id
     name = str(request.form.get("searched_tag"))
     cursor = main.conn.cursor()
-    cursor.execute("SELECT picture_id FROM Tags WHERE tag_id = %s AND name  = %s", (uid, name))
+    cursor.execute("SELECT Tags.name, Pictures.imgdata, Tags.picture_id FROM Tags INNER JOIN Pictures ON Tags.picture_id = Pictures.picture_id WHERE tag_id = %s AND name  = %s", (uid, name))
     pictures = cursor.fetchall()
     return render_template('tag_search.html', display_user=main.getUserPhotosFromPictureID(pictures)) 
 
