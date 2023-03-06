@@ -12,6 +12,7 @@ import app as main
 personal_feed = Blueprint('person_feed', __name__, template_folder='templates')
 
 @personal_feed.route('/personal-feed', methods=['GET'])
+@flask_login.login_required
 def feed():
     current_user = main.getUserIdFromEmail(flask_login.current_user.id)
     photos = main.getFeedPhotos((current_user))

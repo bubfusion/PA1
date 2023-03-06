@@ -12,6 +12,7 @@ album_creation = Blueprint('album_creation', __name__,
 
 
 @album_creation.route("/album_creation", methods=['GET'])
+@flask_login.login_required
 def album():
 	return render_template('album_creation.html', supress='True')
 

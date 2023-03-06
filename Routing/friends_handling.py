@@ -13,17 +13,30 @@ friends_handling = Blueprint('friends_handling', __name__, template_folder='temp
 
 
 def friendTuple(uid):
-    friendIds = main.getUsersFriends(main.getUserIdFromEmail(uid))
+    friendIds = main.getUsersFriends(uid)
     friends = []
     for i in friendIds:
-        friends.append((main.getFirstNameFromId(i[0]), main.getEmailFromId(i[0])))
+        friends.append((main.getFirstNameFromId(i[0]), main.getEmailFromId(i[0]), i[0]))
     return friends
-                                     
+
+def friendRecs(uid):
+    friends = friendTuple(uid)
+    friendsOfFriends = set()
+    for i in range(len(friends)):
+        friendsOfCurrentUser = friendTuple(friends[i][2])
+        for x in range(len(friendsOfCurrentUser)):
+            friendsOfFriends.add(friendsOfCurrentUser[x])
+    friends = set(friends)
+    final = friendsOfFriends.difference(friends)
+    print(final)
+    return final
 
 @friends_handling.route("/friends", methods=['GET'])
+@flask_login.login_required
 def friend():
-    friends = friendTuple(flask_login.current_user.id)
-    return render_template('friends.html', friends = friends)
+    friends = friendTuple(main.getUserIdFromEmail(flask_login.current_user.id))
+    recs = friendRecs(main.getUserIdFromEmail(flask_login.current_user.id))
+    return render_template('friends.html', friends = friends, recs = recs)
 
 @friends_handling.route('/friends', methods=['POST'])
 def add_friend():

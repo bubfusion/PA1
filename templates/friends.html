@@ -25,5 +25,16 @@
             {% endfor %}
             </ul>
         {% endif %}
+
+        <h2>Recommended Friends:</h2>
+        {% if recs %}
+          <ul>
+          {% for recs in recs %}
+                  Name: {{recs[0]}}<br>
+                  Email: {{recs[1]}}<br>
+                  <br>
+          {% endfor %}
+          </ul>
+      {% endif %}
         <a href='/'>Home</a>
   </body>
