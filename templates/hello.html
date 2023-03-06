@@ -44,17 +44,14 @@
 </ul>
 {% endif %}
 
-<h2>Popular tags:</h2>
-<ul>
-
-  <a href="/display_populartags/" class="button" name="popular_tags">View popular tags</a>
-  {% for tag in popular_tags %}
-  <li><a href="/likes/{{photo[1]}}">{{ tag }}</a></li>
-  {% endfor %}
-</ul>
 
 {% if photos %}
-
+<h2>Popular tags:</h2>
+<ul>
+  {% for tag in popular_tags %}
+  <li><a href="/display_populartags/{{photo[0]}}">{{ tag }}</a></li>
+  {% endfor %}
+</ul>
 <ul>
   <h2>Photos:</h2>
   {% for photo in photos %}
@@ -83,13 +80,13 @@
   <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}' />
   </li>
 
-  <!-- search_results.html -->
+<!-- search_results.html -->
   {% for result in results %}
   <div>
     <img src="{{ url_for('display_image', imgdata=result[0]) }}">
     <p>{{ result[1] }}</p>
   </div>
-  {% endfor %}
+  {% endfor %} 
 
 
   {% endfor %}
