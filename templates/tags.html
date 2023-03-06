@@ -1,15 +1,10 @@
-<h3>Popular tags:</h3>
-<ul>
-  {% for tag in popular_tags %}
-  <li>{{ tag[0] }} ({{ tag[1] }} tag)</li>
-  {% endfor %}
-</ul>
+<h3>Tag search</h3>
 
 <body>
-  <form action="/search_tag" method="post">
-    <label for="tag">Search photo by tag:</label>
-    <input type="text" id="tag" name="tag">
-    <button type="submit">Search</button>
-  </form>
+  <form method="post" action="/tag_search">
+    <label for="tag">Search for a tag:</label>
+    <input type="text" name="searched_tag" required='true' />
+    <input type="submit" value="Search!" />
+</form>
 </body>
 

@@ -74,7 +74,7 @@ CREATE TABLE Likes(
 );
 
 CREATE TABLE Tags(
-	tag_id int4  AUTO_INCREMENT, 
+	tag_id int4, 
     picture_id int4,
     name VARCHAR(100),
     PRIMARY KEY(tag_id)

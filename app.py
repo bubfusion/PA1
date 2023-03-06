@@ -39,7 +39,7 @@ app.register_blueprint(leader_board)
 
 # These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hl3jk!luvGaben'  # ADD YOUR PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = '123321Ab!'  # ADD YOUR PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -202,17 +202,22 @@ def getUsersPhotos(uid):
             photo_list[0] = photo_list[0] + (getNumLike(photo_list[0][1]),)
     return photo_list
 
-""" def getTagsFromPictureID(picture_id):
+def getUserPhotosFromPictureID(picture_id):
     cursor = conn.cursor()
+    
     cursor.execute(
-        "SELECT Tags.tag_name FROM Tags JOIN Tagged ON Tagged.tag_id = Tags.tag_id WHERE Tagged.picture_id = '{0}'".format(picture_id))
-    return [row[0] for row in cursor.fetchall()] """
+        "SELECT imgdata, picture_id, caption, user_id FROM Pictures WHERE picture_id = '{0}'".format(picture_id))
+    # NOTE return a list of tuples, [(imgdata, pid, caption, user_id), ...]
+    photo_list = list(cursor.fetchall())
+    if(len(photo_list) > 0):
+            photo_list[0] = photo_list[0] + (getNumLike(photo_list[0][1]),)
+    return photo_list
 
 def getTagsFromPictureID(picture_id):
     cursor = conn.cursor()
     cursor.execute(
         "SELECT name FROM Tags WHERE picture_id = '{0}'".format(picture_id))
-    return cursor.fetchone()[0]
+    return cursor.fetchall()
 
 def getFeedPhotos(uid):
     cursor = conn.cursor()

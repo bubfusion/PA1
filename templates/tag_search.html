@@ -1,4 +1,4 @@
-<head>
+<<head>
     {% if msg %}
     <h4>{{msg}}!</h4>
     {% endif %}
@@ -7,16 +7,14 @@
 
 <body>
     <button type="submit">View all</button>
-    {% for tag in display_all %}
-    <p>Tag ID: {{ tag[0] }}</p>
-    <p>Picture ID: {{ tag[1] }}</p>
+    {% for photo in display_all %}
+    <li>{{photo[2]}}</li>
     {% endfor %}
 
     <button type="submit">View my photos</button>
-    {% for tag in display_user %}
-    <p>Tag ID: {{ tag[0] }}</p>
-    <p>Picture ID: {{ tag[1] }}</p>
+    {% for photo in display_user %}
+    <li>{{photo[2]}}</li>
     {% endfor %}
     <a href='/'>Home</a>
 
-    <body>
+</body>>

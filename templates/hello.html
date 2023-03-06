@@ -43,13 +43,22 @@
 </ul>
 {% endif %}
 
+<h2>Popular tags:</h2>
+<ul>
+
+  <a href="/display_populartags/" class="button" name="popular_tags">View popular tags</a>
+  {% for tag in popular_tags %}
+  <li><a href="/likes/{{photo[1]}}">{{ tag }}</a></li>
+  {% endfor %}
+</ul>
 
 {% if photos %}
 
 <ul>
   <h2>Photos:</h2>
   {% for photo in photos %}
-  <li>{{photo[2]}}
+  <li>
+    {{photo[2]}}
     <a href="/likes/{{photo[1]}}" class="button" name="like">Like</a>
     <form method="POST" action="/add_tag/{{photo[1]}}">
       <input type="hidden" name="picture_id" value="{{ picture_id }}">
@@ -57,19 +66,21 @@
       <input type="text" name="tag_name" required>
       <button type="submit">Add tag</button>
     </form>
-    <p>Tags:</p> <br>
+    <!--- Display tag hyperlinks-->
+    <a href="/display_tags/{{photo[1]}}" class="button" name="display_tags" >View tags</a>
     {% for tag in display_tags %}
-    <p>{{ tag }}</p>
-    {% endfor %}</br>
-    {%if current_user == photo[3] %}
-    <a href="/{{photo[1]}}/delete" class="button" name="delete">Delete</a>
-    {%else%}
-    <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
-    <a href="/profile/{{photo[3]}}" class="button" name="poster">Profile</a>
-    {% endif %}
-    Likes: {{photo[4]}}
-    <br>
-    <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}' />
+    <li><a href="/likes/{{photo[1]}}">{{ tag }}</a></li>
+    {% endfor %}
+
+  {%if current_user == photo[3] %}
+  <a href="/{{photo[1]}}/delete" class="button" name="delete">Delete</a>
+  {%else%}
+  <a href="/comments/{{photo[1]}}" class="button" name="comments">Comment</a>
+  <a href="/profile/{{photo[3]}}" class="button" name="poster">Profile</a>
+  {% endif %}
+  Likes: {{photo[4]}}
+  <br>
+  <img src='data:image/jpg;base64, {{ base64.b64encode(photo[0]).decode("ascii") }}' />
   </li>
 
   <!-- search_results.html -->
