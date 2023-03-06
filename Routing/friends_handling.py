@@ -32,6 +32,7 @@ def friendRecs(uid):
     return final
 
 @friends_handling.route("/friends", methods=['GET'])
+@flask_login.login_required
 def friend():
     friends = friendTuple(main.getUserIdFromEmail(flask_login.current_user.id))
     recs = friendRecs(main.getUserIdFromEmail(flask_login.current_user.id))
