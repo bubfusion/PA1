@@ -1,14 +1,7 @@
-DROP DATABASE photoshare;
 
 CREATE DATABASE IF NOT EXISTS photoshare;
 USE photoshare;
-DROP TABLE IF EXISTS Pictures CASCADE;
-DROP TABLE IF EXISTS Users CASCADE;
-
-CREATE DATABASE IF NOT EXISTS photoshare;
-USE photoshare;
-DROP TABLE IF EXISTS Pictures CASCADE;
-DROP TABLE IF EXISTS Users CASCADE;
+DROP TABLE Comments;
 
 
 CREATE TABLE Users (
@@ -47,7 +40,7 @@ CREATE TABLE Pictures
 
 CREATE TABLE Comments(
     commentid int4  AUTO_INCREMENT,
-    date DATE,
+    date DATETIME,
     text VARCHAR(255),
     user_id int4 NOT NULL,
     picture_id int4 NOT NULL,

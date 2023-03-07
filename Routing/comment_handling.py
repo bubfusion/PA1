@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import flask
 from flask import Flask, Response, request, render_template, redirect, url_for, Blueprint
 from flaskext.mysql import MySQL
@@ -24,7 +24,8 @@ def user_commented(picture_id):
         uid = main.getUserIdFromEmail(flask_login.current_user.id)
     except:
         uid = -1
-    date = datetime.date.today()
+    date = datetime.now()
+    print(date)
     text = request.form.get("comment")
     try:
         cursor.execute('''INSERT INTO Comments (user_id, date, picture_id, text) VALUES (%s, %s, %s , %s )''', (uid, date, picture_id, text))
@@ -42,6 +43,6 @@ def grab_comments():
     text = str(request.form.get("comment"))
     cursor = main.conn.cursor()
     #[(user_id, date, text, imgdata)]
-    cursor.execute("SELECT Comments.user_id, Comments.date, Comments.text, Pictures.imgdata FROM Comments INNER JOIN Pictures ON Comments.picture_id = Pictures.picture_id WHERE text = '{0}'".format(text))
+    cursor.execute("SELECT Comments.user_id, Comments.date, Comments.text, Pictures.imgdata FROM Comments INNER JOIN Pictures ON Comments.picture_id = Pictures.picture_id WHERE text = '{0}' ORDER BY Comments.date DESC".format(text))
     comments = cursor.fetchall()
     return render_template('comment_search.html', comments = comments, base64 = base64)
